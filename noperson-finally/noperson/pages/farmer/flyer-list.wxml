@@ -1,0 +1,107 @@
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <navigation-bar back="true" title="飞手列表"></navigation-bar>
+  
+  <!-- 缓存数据提示 -->
+  <view class="cache-tip" wx:if="lastUpdateTime && !refreshing && !loading">
+    <text>数据更新时间: {{lastUpdateTime}}</text>
+    <text class="cache-label">缓存数据</text>
+  </view>
+  
+  <!-- 飞手列表 -->
+  <scroll-view 
+    class="flyer-list"
+    scroll-y
+    bindscrolltolower="onLoadMore"
+    refresher-enabled
+    bindrefresherrefresh="onRefresh"
+    refresher-triggered="{{refreshing}}"
+    wx:if="!error"
+  >
+    <!-- 飞手项 -->
+    <view class="flyer-item" wx:for="{{flyerList}}" wx:key="id">
+      <!-- 飞手信息 -->
+      <view class="flyer-info" bindtap="viewFlyerDetail" data-id="{{item.id}}" data-name="{{item.name}}">
+        <view class="flyer-avatar">
+          <image src="{{item.avatar}}" mode="aspectFill"></image>
+          <!-- 空闲状态标识 -->
+          <view class="status-badge {{item.isFree ? 'status-free' : 'status-busy'}}">
+            {{item.isFree ? '空闲' : '繁忙'}}
+          </view>
+        </view>
+        <view class="flyer-details">
+          <view class="flyer-name-rating">
+            <text class="flyer-name">{{item.name}}</text>
+            <view class="rating">
+              <text class="rating-value">{{item.formattedRating || item.rating}}</text>
+              <view class="star-container">
+                <text class="star" wx:for="{{5}}" wx:key="index" wx:if="{{index < item.starLevel}}">★</text>
+                <text class="star empty" wx:for="{{5}}" wx:key="index" wx:if="{{index >= item.starLevel}}">★</text>
+              </view>
+            </view>
+          </view>
+          <text class="flyer-intro">{{item.introduction}}</text>
+          <view class="flyer-meta">
+            <text class="flyer-orders">已完成: {{item.completedOrders}}单</text>
+            <text class="flyer-evaluation">评价: {{item.evaluationCount}}条</text>
+            <text class="flyer-positive">好评率: {{item.positiveRate}}%</text>
+          </view>
+          <view class="flyer-tags">
+            <text class="tag" wx:if="item.skillLevel">{{item.skillLevel}}</text>
+            <text class="tag" wx:if="item.licenseType">资质: {{item.licenseType}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 操作按钮 -->
+      <view class="flyer-actions">
+        <button class="contact-btn" 
+                size="mini" 
+                type="default"
+                bindtap="contactFlyer" 
+                data-id="{{item.id}}" 
+                data-name="{{item.name}}"
+                data-phone="{{item.phone || ''}}"
+        >
+          联系
+        </button>
+        <button class="invite-btn {{item.isFree ? '' : 'disabled'}}" 
+                size="mini" 
+                type="primary" 
+                bindtap="inviteFlyer" 
+                data-id="{{item.id}}" 
+                data-name="{{item.name}}" 
+                data-free="{{item.isFree}}"
+                disabled="{{!item.isFree}}"
+        >
+          {{item.isFree ? '邀请' : '繁忙'}}
+        </button>
+      </view>
+    </view>
+    
+    <!-- 加载状态 -->
+    <view class="loading-tip" wx:if="{{loading && flyerList.length > 0}}">
+      <text class="loading-spinner"></text>
+      <text>加载中...</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && flyerList.length === 0}}">
+      <image class="empty-icon" src="/assets/images/user-info.png"></image>
+      <text class="empty-text">暂无飞手数据</text>
+      <text class="empty-subtext">请稍后再来查看</text>
+    </view>
+    
+    <!-- 没有更多 -->
+    <view class="no-more" wx:if="{{!hasMore && flyerList.length > 0}}">
+      <text>没有更多了</text>
+    </view>
+  </scroll-view>
+  
+  <!-- 错误状态 -->
+  <view class="error-state" wx:if="{{error}}">
+    <image class="error-icon" src="/assets/images/error.png"></image>
+    <text class="error-text">{{errorMsg || '加载失败'}}</text>
+    <button class="retry-btn" type="primary" bindtap="retryLoad">重新加载</button>
+  </view>
+</view>

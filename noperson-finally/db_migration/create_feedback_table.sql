@@ -1,0 +1,26 @@
+-- Create demand feedback table
+CREATE TABLE IF NOT EXISTS `demand_feedback` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Feedback ID',
+  `demand_id` BIGINT NOT NULL COMMENT 'Demand ID',
+  `farmer_id` BIGINT NOT NULL COMMENT 'Farmer ID',
+  `farmer_name` VARCHAR(100) NOT NULL COMMENT 'Farmer name',
+  `flyer_id` BIGINT NOT NULL COMMENT 'Flyer ID',
+  `flyer_name` VARCHAR(100) NOT NULL COMMENT 'Flyer name',
+  `feedback_type` VARCHAR(50) NOT NULL COMMENT 'Feedback type',
+  `feedback_content` TEXT COMMENT 'Feedback content',
+  `status` VARCHAR(20) NOT NULL DEFAULT 'pending' COMMENT 'Status',
+  `admin_id` BIGINT COMMENT 'Admin ID',
+  `admin_name` VARCHAR(100) COMMENT 'Admin name',
+  `audit_time` DATETIME COMMENT 'Audit time',
+  `audit_remark` TEXT COMMENT 'Audit remark',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Create time',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Update time',
+  PRIMARY KEY (`id`),
+  INDEX `idx_demand_id` (`demand_id`),
+  INDEX `idx_farmer_id` (`farmer_id`),
+  INDEX `idx_flyer_id` (`flyer_id`),
+  INDEX `idx_status` (`status`),
+  FOREIGN KEY (`demand_id`) REFERENCES `demand` (`demand_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`farmer_id`) REFERENCES `sys_user` (`user_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`flyer_id`) REFERENCES `sys_user` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Demand feedback table';

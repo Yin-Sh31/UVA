@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cty.nopersonfinally.mapper.SystemConfigMapper">
+    
+    <!-- 根据配置键名获取配置值 -->
+    <select id="getConfigValueByKey" resultType="java.lang.String">
+        SELECT config_value
+        FROM system_config
+        WHERE config_key = #{configKey}
+    </select>
+    
+    <!-- 更新配置值 -->
+    <update id="updateConfigValueByKey">
+        UPDATE system_config
+        SET config_value = #{configValue},
+            update_time = NOW()
+        WHERE config_key = #{configKey}
+    </update>
+</mapper>

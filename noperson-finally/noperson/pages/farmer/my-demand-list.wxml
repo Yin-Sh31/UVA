@@ -1,0 +1,136 @@
+<!-- farmer/my-demand-list.wxml -->
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <navigation-bar title="我的需求"></navigation-bar>
+  
+  <!-- 状态筛选 -->
+  <view class="status-filter">
+    <picker bindchange="switchStatus" value="{{currentStatusIndex}}" range="{{statusList}}" range-key="name">
+      <view class="picker">
+        <text class="picker-text">当前筛选：{{statusList[currentStatusIndex].name}}</text>
+        <text class="picker-arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+  
+  <!-- 需求列表 -->
+  <scroll-view 
+    class="demand-list"
+    scroll-y
+    bindscrolltolower="onLoadMore"
+    refresher-enabled
+    bindrefresherrefresh="onRefresh"
+    refresher-triggered="{{refreshing}}"
+  >
+    <!-- 需求项 -->
+    <view class="demand-item" wx:for="{{demandList}}" wx:key="id" hover-class="item-hover">
+      <!-- 缓存数据标记 -->
+      <view class="cached-tag" wx:if="{{cachedList && cachedList.data && cachedList.data.length > 0}}">
+        <text class="cached-tag-text">缓存</text>
+      </view>
+      
+      <!-- 需求头部 -->
+      <view class="demand-header">
+        <view class="demand-id">需求编号：{{item.id}}</view>
+        <view class="demand-status {{item.statusColorClass}}">{{item.statusText}}</view>
+      </view>
+      
+      <!-- 需求信息 -->
+      <view class="demand-info">
+        <view class="info-row">
+          <view class="info-label">需求类型：</view>
+          <view class="info-value">{{item.orderTypeDesc || (item.orderType === 2 ? '巡检' : '喷洒')}}</view>
+        </view>
+        <view class="info-row">
+          <view class="info-label">创建时间：</view>
+          <view class="info-value">{{item.formattedCreateTime || '未设置'}}</view>
+        </view>
+        <view class="info-row">
+          <view class="info-label">需求面积：</view>
+          <view class="info-value">{{item.land_area || 0}} 亩</view>
+        </view>
+        <view class="info-row">
+          <view class="info-label">需求地点：</view>
+          <view class="info-value">{{item.land_location || '未填写'}}</view>
+        </view>
+        
+        <!-- 作物类型信息 -->
+        <view class="info-row" wx:if="{{item.crop_type}}">
+          <view class="info-label">作物类型：</view>
+          <view class="info-value">{{item.crop_type}}</view>
+        </view>
+        
+        <!-- 期望时间信息 -->
+        <view class="info-row" wx:if="{{item.formattedExpectedTime}}">
+          <view class="info-label">期望时间：</view>
+          <view class="info-value">{{item.formattedExpectedTime || '未设置'}}</view>
+        </view>
+      </view>
+      
+      <!-- 需求操作 -->
+      <view class="demand-actions">
+        <!-- 调试信息：显示当前item的ID -->
+        <view style="color: #999; font-size: 12px; margin-bottom: 5px;">需求ID: {{item.id}}</view>
+        <view class="action-btn detail-btn" bindtap="viewDemandDetail" data-id="{{item.id}}" hover-class="btn-hover">
+          查看详情
+        </view>
+        <view class="action-btn cancel-btn" bindtap="cancelDemand" data-id="{{item.id}}" wx:if="{{item.status === 0 || item.status === 'pending' || item.status === '待接单'}}" hover-class="btn-hover">
+          取消需求
+        </view>
+        <!-- 仅对已完成的订单显示评价按钮 -->
+        <view class="action-btn review-btn" bindtap="createReview" data-id="{{item.id}}" wx:if="{{item.status === 4 || item.status === 'completed' || item.status === '已完成'}}" hover-class="btn-hover">
+          去评价
+        </view>
+      </view>
+    </view>
+    
+    <!-- 加载状态 -->
+    <view class="loading-tip" wx:if="{{loading && demandList.length > 0}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+    
+    <!-- 没有更多数据 -->
+    <view class="no-more-data" wx:if="{{!hasMore && !loading && demandList.length > 0}}">
+      <text class="no-more-text">没有更多数据了</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && !refreshing && demandList.length === 0 && !error}}">
+      <image class="empty-icon" src="/assets/images/no-message.svg"></image>
+      <text class="empty-text">暂无需求记录</text>
+    </view>
+    
+    <!-- 错误状态 -->
+    <view class="error-state" wx:if="{{error && !loading && !refreshing}}">
+      <image class="error-icon" src="/assets/images/error.png"></image>
+      <text class="error-text">{{errorMsg || '加载失败'}}</text>
+      <button class="retry-btn" bindtap="refreshPage">重新加载</button>
+    </view>
+    
+    <!-- 没有更多 -->
+    <view class="no-more" wx:if="!hasMore && demandList.length > 0">
+      <text>没有更多了</text>
+    </view>
+  </scroll-view>
+
+  <!-- 自定义底部导航栏 -->
+  <view class="custom-tab-bar fixed-bottom">
+    <view class="tab-item" bindtap="navigateToHome">
+      <text class="tab-icon">🏠</text>
+      <text>首页</text>
+    </view>
+    <view class="tab-item active">
+      <text class="tab-icon">📝</text>
+      <text>我的需求</text>
+    </view>
+    <view class="tab-item" bindtap="navigateToChat">
+      <text class="tab-icon">💬</text>
+      <text>消息</text>
+    </view>
+    <view class="tab-item" bindtap="navigateToProfile">
+      <text class="tab-icon">👤</text>
+      <text>我的</text>
+    </view>
+  </view>
+</view>

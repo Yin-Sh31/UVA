@@ -1,0 +1,135 @@
+<view class="wallet-container">
+  <!-- 顶部导航栏 -->
+  <navigation-bar title="我的钱包" back="true" color="black" background="#FFF"></navigation-bar>
+
+  <!-- 钱包卡片 -->
+  <view class="wallet-card">
+    <view class="wallet-header">
+      <text class="wallet-title">当前余额</text>
+    </view>
+    <view class="balance-section">
+      <text class="balance-symbol">¥</text>
+      <text class="balance-amount">{{balance || '0.00'}}</text>
+    </view>
+    <view class="wallet-footer">
+      <text class="wallet-tip">可随时提现至您的微信账户</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮区域 -->
+  <view class="action-buttons">
+    <button 
+      class="recharge-btn"
+      type="primary"
+      disabled="{{loading}}"
+      bindtap="openRechargeModal"
+    >
+      充值
+    </button>
+    <button 
+      class="withdraw-btn"
+      type="default"
+      disabled="{{loading}}"
+      bindtap="openWithdrawModal"
+    >
+      提现
+    </button>
+  </view>
+
+  <!-- 交易记录提示 -->
+  <view class="record-tip">
+    <text>交易记录功能即将上线，敬请期待</text>
+  </view>
+
+  <!-- 充值弹窗 -->
+  <view class="modal-mask" wx:if="{{showRechargeModal}}"></view>
+  <view class="modal-content" wx:if="{{showRechargeModal}}">
+    <view class="modal-header">
+      <text class="modal-title">余额充值</text>
+      <view class="modal-close" bindtap="closeRechargeModal">
+        <image src="/assets/images/close-icon.png" mode="aspectFit"></image>
+      </view>
+    </view>
+    <view class="modal-body">
+      <view class="input-section">
+        <text class="input-label">充值金额</text>
+        <view class="amount-input">
+          <text class="input-symbol">¥</text>
+          <input 
+            type="digit"
+            placeholder="请输入充值金额"
+            value="{{rechargeAmount}}"
+            bindinput="onRechargeAmountInput"
+          />
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button 
+        class="modal-cancel-btn"
+        type="default"
+        disabled="{{loading}}"
+        bindtap="closeRechargeModal"
+      >
+        取消
+      </button>
+      <button 
+        class="modal-confirm-btn"
+        type="primary"
+        disabled="{{loading}}"
+        loading="{{loading}}"
+        bindtap="confirmRecharge"
+      >
+        确认充值
+      </button>
+    </view>
+  </view>
+
+  <!-- 提现弹窗 -->
+  <view class="modal-mask" wx:if="{{showWithdrawModal}}"></view>
+  <view class="modal-content" wx:if="{{showWithdrawModal}}">
+    <view class="modal-header">
+      <text class="modal-title">余额提现</text>
+      <view class="modal-close" bindtap="closeWithdrawModal">
+        <image src="/assets/images/close-icon.png" mode="aspectFit"></image>
+      </view>
+    </view>
+    <view class="modal-body">
+      <view class="current-balance">
+        <text class="balance-label">当前余额</text>
+        <text class="balance-amount">¥{{balance.toFixed(2)}}</text>
+      </view>
+      <view class="input-section">
+        <text class="input-label">提现金额</text>
+        <view class="amount-input">
+          <text class="input-symbol">¥</text>
+          <input 
+            type="digit"
+            placeholder="请输入提现金额"
+            value="{{withdrawAmount}}"
+            bindinput="onWithdrawAmountInput"
+          />
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button 
+        class="modal-cancel-btn"
+        type="default"
+        disabled="{{loading}}"
+        bindtap="closeWithdrawModal"
+      >
+        取消
+      </button>
+      <button 
+        class="modal-confirm-btn"
+        type="primary"
+        disabled="{{loading}}"
+        loading="{{loading}}"
+        bindtap="confirmWithdraw"
+      >
+        确认提现
+      </button>
+    </view>
+  </view>
+</view>

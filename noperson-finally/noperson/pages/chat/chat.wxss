@@ -1,0 +1,270 @@
+/* pages/chat/chat.wxss */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* 聊天内容区域 */
+.chat-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* 加载更多提示 */
+.load-more-tip {
+  text-align: center;
+  padding: 20rpx;
+  color: #999;
+  font-size: 24rpx;
+}
+
+/* 消息列表 */
+.message-list {
+  padding: 20rpx;
+}
+
+.message-item {
+  margin-bottom: 20rpx;
+}
+
+/* 时间显示 */
+.message-time-wrapper {
+  text-align: center;
+  margin: 20rpx 0;
+}
+
+.message-time {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #fff;
+  font-size: 22rpx;
+  border-radius: 8rpx;
+}
+
+/* 消息内容行 */
+.message-content-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+}
+
+.message-self .message-content-row {
+  flex-direction: row-reverse;
+}
+
+/* 头像 */
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: #e0e0e0;
+}
+
+/* 消息气泡包装器 */
+.message-bubble-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-self .message-bubble-wrapper {
+  align-items: flex-end;
+}
+
+.message-other .message-bubble-wrapper {
+  align-items: flex-start;
+}
+
+/* 消息气泡 */
+.message-bubble {
+  max-width: 70%;
+  padding: 20rpx 24rpx;
+  border-radius: 16rpx;
+  position: relative;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.message-self .message-bubble {
+  background-color: #07c160;
+  color: #fff;
+  border-bottom-right-radius: 4rpx;
+}
+
+.message-other .message-bubble {
+  background-color: #fff;
+  color: #333;
+  border-bottom-left-radius: 4rpx;
+}
+
+/* 失败消息样式 */
+.message-failed {
+  background-color: #ff4d4f !important;
+  opacity: 0.8;
+}
+
+/* 图片气泡 */
+.image-bubble {
+  padding: 10rpx;
+  background-color: transparent !important;
+}
+
+.message-image {
+  max-width: 400rpx;
+  max-height: 400rpx;
+  border-radius: 12rpx;
+  display: block;
+}
+
+/* 消息文本 */
+.message-text {
+  font-size: 30rpx;
+  line-height: 1.5;
+}
+
+/* 消息状态指示器 */
+.message-status-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 8rpx;
+  font-size: 20rpx;
+}
+
+.loading-spinner {
+  color: #999;
+}
+
+.spinner-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.failed-icon {
+  color: #ff4d4f;
+  font-weight: bold;
+}
+
+.sent-icon {
+  color: #07c160;
+}
+
+/* 底部占位 */
+.bottom-placeholder {
+  height: 40rpx;
+}
+
+/* 输入区域 */
+.input-area {
+  background-color: #fff;
+  border-top: 1rpx solid #e0e0e0;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.input-toolbar {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  gap: 16rpx;
+}
+
+/* 输入框包装器 */
+.input-wrapper {
+  flex: 1;
+  background-color: #f5f5f5;
+  border-radius: 24rpx;
+  padding: 16rpx 24rpx;
+  min-height: 72rpx;
+  max-height: 200rpx;
+  transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within {
+  background-color: #f0f0f0;
+}
+
+.message-input {
+  width: 100%;
+  min-height: 40rpx;
+  max-height: 160rpx;
+  font-size: 30rpx;
+  line-height: 1.5;
+  color: #333;
+}
+
+.message-input::placeholder {
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 发送按钮 */
+.send-btn {
+  min-width: 120rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0e0e0;
+  color: #999;
+  border-radius: 36rpx;
+  padding: 0 32rpx;
+  margin: 0;
+  font-size: 28rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.send-btn::after {
+  border: none;
+}
+
+.send-btn.active {
+  background-color: #07c160 !important;
+  color: #fff !important;
+  box-shadow: 0 2rpx 8rpx rgba(7, 193, 96, 0.3) !important;
+}
+
+.send-btn.active:active {
+  transform: scale(0.98) !important;
+  box-shadow: 0 1rpx 4rpx rgba(7, 193, 96, 0.3) !important;
+}
+
+.send-btn[disabled] {
+  background-color: #e0e0e0 !important;
+  color: #999 !important;
+  box-shadow: none !important;
+}
+
+/* 响应式适配 */
+@media (max-width: 375px) {
+  .message-bubble {
+    max-width: 75%;
+  }
+  
+  .message-image {
+    max-width: 300rpx;
+    max-height: 300rpx;
+  }
+}
+
+/* 安全区域适配 */
+@supports (padding-bottom: constant(safe-area-inset-bottom)) {
+  .input-area {
+    padding-bottom: constant(safe-area-inset-bottom);
+  }
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .input-area {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

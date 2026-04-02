@@ -1,0 +1,157 @@
+/* payment/create.wxss */
+page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+}
+
+.payment-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 支付金额区域 */
+.amount-section {
+  padding: 60rpx 0;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.amount-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.amount-value {
+  font-size: 64rpx;
+  color: #e64340;
+  font-weight: bold;
+}
+
+/* 订单信息 */
+.order-info {
+  padding: 30rpx;
+  background-color: #fff;
+  margin-bottom: 20rpx;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.order-label {
+  font-size: 30rpx;
+  color: #666;
+}
+
+.order-value {
+  font-size: 30rpx;
+  color: #333;
+  text-align: right;
+}
+
+/* 支付方式 */
+.payment-methods {
+  padding: 30rpx;
+  background-color: #fff;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  color: #333;
+  margin-bottom: 24rpx;
+  display: block;
+}
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.payment-method:last-child {
+  border-bottom: none;
+}
+
+.payment-icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin-right: 20rpx;
+}
+
+.payment-name {
+  flex: 1;
+  font-size: 32rpx;
+  color: #333;
+}
+
+.method-selected {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.method-selected image {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.payment-method-active {
+  color: #1aad19;
+}
+
+/* 按钮区域 */
+.action-buttons {
+  padding: 40rpx;
+  background-color: #fff;
+  margin-top: auto;
+}
+
+.pay-btn {
+  width: 100%;
+  height: 96rpx;
+  border-radius: 48rpx;
+  background-color: #1aad19;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+  line-height: 96rpx;
+  margin-bottom: 24rpx;
+}
+
+.cancel-btn {
+  width: 100%;
+  height: 96rpx;
+  border-radius: 48rpx;
+  background-color: #f0f0f0;
+  color: #666;
+  font-size: 32rpx;
+  line-height: 96rpx;
+}
+
+/* 适配不同尺寸的屏幕 */
+@media screen and (min-width: 375px) {
+  .amount-value {
+    font-size: 72rpx;
+  }
+}
+
+@media screen and (min-width: 414px) {
+  .amount-value {
+    font-size: 80rpx;
+  }
+}

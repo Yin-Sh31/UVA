@@ -1,0 +1,64 @@
+<!-- 飞手我的租借记录页面 -->
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <navigation-bar title="我的租借" back="true" background="#ffffff"></navigation-bar>
+  
+  <!-- 内容容器 -->
+  <scroll-view 
+    class="content-container"
+    scroll-y
+    refresher-enabled="true"
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onRefresh"
+  >
+    <!-- 加载中状态 -->
+    <view class="loading-state" wx:if="{{loading && rentalList.length === 0}}">
+      <view class="loading-spinner"></view>
+      <text>加载中...</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{rentalList.length === 0 && !loading}}">
+      <image src="/assets/images/no-message.svg" mode="aspectFit"></image>
+      <text>暂无租借记录</text>
+    </view>
+    
+    <!-- 租借记录列表 -->
+    <view class="rental-list" wx:else>
+      <view 
+        class="rental-item" 
+        wx:for="{{rentalList}}" 
+        wx:key="id"
+        bindtap="viewRentalDetail"
+        data-id="{{item.id}}"
+      >
+        <view class="rental-header">
+          <view class="device-info">
+            <text class="device-name">{{item.deviceName}}</text>
+            <text class="device-type">{{item.deviceType}}</text>
+          </view>
+          <view class="status-badge" style="color: {{item.rentalStatusColor}}">
+            {{item.rentalStatus}}
+          </view>
+        </view>
+        
+        <view class="rental-content">
+          <view class="time-info">
+            <view class="time-item">
+              <text class="time-label">租借时间：</text>
+              <text class="time-value">{{item.rentalStartTime}}</text>
+            </view>
+            <view class="time-item">
+              <text class="time-label">归还时间：</text>
+              <text class="time-value">{{item.rentalEndTime}}</text>
+            </view>
+          </view>
+          
+          <view class="rental-footer">
+            <text class="rental-id">租借编号：{{item.id}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

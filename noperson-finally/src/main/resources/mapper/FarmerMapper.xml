@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cty.nopersonfinally.mapper.FarmerMapper">
+
+    <!-- 飞手分页查询农户列表 -->
+    <select id="selectFarmersForFlyer" resultType="com.cty.nopersonfinally.pojo.vo.FarmerInfoVO">
+        SELECT 
+            su.user_id AS userId,
+            su.username,
+            su.real_name AS realName,
+            su.phone,
+            su.avatar,
+            su.role_type AS roleType,
+            su.status,
+            su.balance,
+            su.create_time AS createTime,
+            su.last_login_time AS lastLoginTime
+        FROM sys_user su
+        WHERE su.role_type = 1 -- 1表示农户角色
+        AND su.is_deleted = 0 -- 未删除
+        ORDER BY su.create_time DESC
+    </select>
+    
+    <!-- 管理员分页查询农户列表（支持关键词搜索） -->
+    <select id="selectFarmersForAdmin" resultType="com.cty.nopersonfinally.pojo.vo.FarmerInfoVO">
+        SELECT 
+            su.user_id AS userId,
+            su.username,
+            su.real_name AS realName,
+            su.phone,
+            su.avatar,
+            su.role_type AS roleType,
+            su.status,
+            su.balance,
+            su.create_time AS createTime,
+            su.last_login_time AS lastLoginTime
+        FROM sys_user su
+        WHERE su.role_type = 1 -- 1表示农户角色
+        AND su.is_deleted = 0 -- 未删除
+        <if test="keyword != null and keyword != ''">
+            AND (
+                su.username LIKE CONCAT('%', #{keyword}, '%') OR
+                su.real_name LIKE CONCAT('%', #{keyword}, '%') OR
+                su.phone LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+        ORDER BY su.create_time DESC
+    </select>
+
+    <!-- 根据ID查询农户详细信息 -->
+    <select id="selectFarmerInfoById" resultType="com.cty.nopersonfinally.pojo.vo.FarmerInfoVO">
+        SELECT 
+            su.user_id AS userId,
+            su.username,
+            su.real_name AS realName,
+            su.phone,
+            su.avatar,
+            su.role_type AS roleType,
+            su.status,
+            su.balance,
+            su.create_time AS createTime,
+            su.last_login_time AS lastLoginTime
+        FROM sys_user su
+        WHERE su.user_id = #{farmerId}
+        AND su.role_type = 1 -- 1表示农户角色
+        AND su.is_deleted = 0 -- 未删除
+    </select>
+</mapper>

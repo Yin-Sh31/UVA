@@ -1,0 +1,59 @@
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <navigation-bar title="我的"></navigation-bar>
+  
+  <!-- 内容容器 -->
+  <view class="content-container">
+    <!-- 用户信息卡片 -->
+    <view class="user-card">
+      <view class="avatar-container">
+        <image class="avatar" src="{{userInfo.avatar || '/assets/images/user-avatar.png'}}" mode="aspectFill"></image>
+      </view>
+      <view class="user-info">
+        <text class="user-name">{{userInfo.realName || '农户用户'}}</text>
+        <view class="balance-container">
+          <text class="balance-label">余额</text>
+          <text class="balance-amount">¥{{userInfo.balance || '0.00'}}</text>
+        </view>
+      </view>
+      <view class="edit-btn" bindtap="navigateToPage" data-id="my_info">
+        <text>编辑</text>
+      </view>
+    </view>
+  
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <view class="menu-item" wx:for="{{menuItems}}" wx:key="id" bindtap="navigateToPage" data-id="{{item.id}}">
+      <view class="menu-icon">
+          <image src="{{item.icon}}" mode="aspectFit"></image>
+        </view>
+        <text class="menu-name">{{item.name}}</text>
+    </view>
+  </view>
+  
+  <!-- 退出登录按钮 -->
+    <view class="logout-section">
+      <button class="logout-btn" type="warn" bindtap="logout">退出登录</button>
+    </view>
+  </view>
+
+  <!-- 自定义底部导航栏 -->
+  <view class="custom-tab-bar fixed-bottom">
+    <view class="tab-item" bindtap="navigateToHome">
+      <text class="tab-icon">🏠</text>
+      <text>首页</text>
+    </view>
+    <view class="tab-item" bindtap="navigateToMyDemands">
+      <text class="tab-icon">📝</text>
+      <text>我的需求</text>
+    </view>
+    <view class="tab-item" bindtap="navigateToChat">
+      <text class="tab-icon">💬</text>
+      <text>消息</text>
+    </view>
+    <view class="tab-item active">
+      <text class="tab-icon">👤</text>
+      <text>我的</text>
+    </view>
+  </view>
+</view>

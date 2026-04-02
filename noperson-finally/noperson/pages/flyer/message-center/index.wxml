@@ -1,0 +1,64 @@
+<navigation-bar 
+  title="消息中心"
+  background="#ffffff"
+  color="#333333"
+  back="false"
+/>
+
+<view class="message-container">
+  <!-- 会话列表 -->
+  <scroll-view 
+    class="conversation-list"
+    scroll-y
+    enable-back-to-top
+    bindscrolltolower="onReachBottom"
+    refresher-enabled="true"
+    refresher-threshold="100"
+    bindrefresherrefresh="onPullDownRefresh"
+  >
+    <!-- 会话列表项 -->
+    <view wx:for="{{conversationList}}" 
+          wx:for-item="conversation" 
+          wx:key="conversationId" 
+          class="conversation-item"
+          bindtap="openConversation"
+          data-conversation="{{conversation}}"
+    >
+      <!-- 用户头像 -->
+      <view class="user-avatar">
+        <image wx:if="{{conversation.validAvatar}}" src="{{conversation.validAvatar}}" mode="aspectFill"></image>
+        <text wx:if="{{!conversation.validAvatar}}" class="avatar-text">{{conversation.otherUserName ? conversation.otherUserName.charAt(0) : '用'}}</text>
+        <!-- 未读消息角标 -->
+        <view class="unread-badge" wx:if="{{conversation.unreadCount > 0}}">
+          <text class="unread-count">{{conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}}</text>
+        </view>
+      </view>
+      
+      <!-- 会话信息 -->
+      <view class="conversation-info">
+        <view class="conversation-header">
+          <text class="user-name">{{conversation.otherUserName}} <text class="user-type">({{getUserTypeText(conversation.otherUserType)}})</text></text>
+          <text class="message-time">{{formatTime(conversation.lastMessageTime)}}</text>
+        </view>
+        <text class="last-message">{{conversation.lastMessageContent}}</text>
+        <!-- 相关订单信息 -->
+        <view class="related-order" wx:if="{{conversation.relatedOrderId}}">
+          <text class="order-tag">订单</text>
+          <text class="order-id">{{conversation.relatedOrderId}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 无会话提示 -->
+    <view class="no-conversations" wx:if="{{conversationList.length === 0 && !loading}}">
+      <image src="/assets/images/no-message.svg" mode="aspectFit"></image>
+      <text class="no-conversation-text">暂无会话</text>
+      <text class="no-conversation-subtext">开始与其他用户交流吧</text>
+    </view>
+  </scroll-view>
+  
+  <!-- 加载更多 -->
+  <view class="loading-more" wx:if="{{loading && conversationList.length > 0}}">
+    <text>加载中...</text>
+  </view>
+</view>

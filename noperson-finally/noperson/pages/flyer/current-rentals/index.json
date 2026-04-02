@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "当前租借",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "navigation-bar": "../../../components/navigation-bar/navigation-bar"
+  }
+}

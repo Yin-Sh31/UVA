@@ -1,0 +1,37 @@
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <navigation-bar back="true" title="消息详情"></navigation-bar>
+  
+  <!-- 消息头部信息 -->
+  <view class="message-header">
+    <view class="message-icon {{messageInfo.type}}">
+      <image 
+        src="{{messageInfo.type === 'order' ? '/images/order-icon.png' : messageInfo.type === 'demand' ? '/images/demand-icon.png' : messageInfo.type === 'payment' ? '/assets/images/payment-icon.svg' : '/assets/images/system-icon.svg'}}" 
+        mode="aspectFit"
+      ></image>
+    </view>
+    <view class="message-header-info">
+      <view class="message-title">{{messageInfo.title}}</view>
+      <view class="message-time">{{messageInfo.time}}</view>
+    </view>
+  </view>
+  
+  <!-- 消息内容 -->
+  <view class="message-content">
+    <text>{{messageContent}}</text>
+  </view>
+  
+  <!-- 相关订单或需求信息 -->
+  <view class="related-info" wx:if="{{messageInfo.orderName}}">
+    <view class="related-title">相关订单</view>
+    <view class="related-item">
+      <text class="related-name">{{messageInfo.orderName}}</text>
+      <button class="related-btn" bindtap="viewRelatedOrder">查看订单</button>
+    </view>
+  </view>
+  
+  <!-- 操作按钮 -->
+  <view class="action-buttons" wx:if="{{showActionButtons}}">
+    <button class="action-btn" bindtap="handleAction">处理操作</button>
+  </view>
+</view>

@@ -1,0 +1,141 @@
+<!-- flyer/device-return/index.wxml -->
+<view class="device-return-container">
+  <navigation-bar title="设备归还" back="true" color="black" background="#FFF"></navigation-bar>
+  
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+  
+  <!-- 错误状态 -->
+  <view class="error-container" wx:if="{{error && !loading}}">
+    <image src="/assets/images/error-icon.png" mode="aspectFit" class="error-icon"></image>
+    <text class="error-text">{{error}}</text>
+    <button class="retry-btn" bindtap="loadRentedDevices">重试</button>
+  </view>
+  
+  <!-- 已租借设备列表 -->
+  <scroll-view 
+    class="device-list" 
+    wx:if="{{!loading && !error}}"
+    scroll-y
+    refresher-enabled="true"
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onRefresh"
+  >
+    <view class="device-item" wx:for="{{rentedDevices}}" wx:key="id">
+      <!-- 设备基本信息 -->
+      <view class="device-header">
+        <view class="device-title">
+          <text class="device-name">{{item.name || '无人机'}}</text>
+          <text class="device-type">{{item.type || '未知型号'}}</text>
+        </view>
+        <text class="rent-status">已租借</text>
+      </view>
+      
+      <!-- 租借信息 -->
+      <view class="rent-info">
+        <view class="rent-info-item">
+          <text class="info-label">租借时间：</text>
+          <text class="info-value">{{item.rentTime || '--'}}</text>
+        </view>
+        <view class="rent-info-item">
+          <text class="info-label">机主：</text>
+          <text class="info-value">{{item.ownerName || '--'}}</text>
+        </view>
+        <view class="rent-info-item">
+          <text class="info-label">预计费用：</text>
+          <text class="info-value price">{{calculateEstimatedFee(item)}} 元</text>
+        </view>
+      </view>
+      
+      <!-- 设备详情 -->
+      <view class="device-details">
+        <view class="detail-row">
+          <text class="detail-label">设备编号：</text>
+          <text class="detail-value">{{item.id}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">设备状态：</text>
+          <text class="detail-value">{{getStatusText(item.deviceStatus)}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">当前位置：</text>
+          <text class="detail-value">{{item.currentLocation || '--'}}</text>
+        </view>
+      </view>
+      
+      <!-- 归还表单 -->
+      <view class="return-form" wx:if="{{currentReturnDevice === item.id}}">
+        <view class="form-group">
+          <text class="form-label">归还地点</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入归还地点"
+            bindinput="onLocationInput"
+            value="{{returnLocation}}"
+          />
+        </view>
+        <view class="form-group">
+          <text class="form-label">设备状况</text>
+          <radio-group class="radio-group" bindchange="onConditionChange">
+            <label class="radio-item">
+              <radio value="good" checked="{{deviceCondition === 'good'}}" />完好无损
+            </label>
+            <label class="radio-item">
+              <radio value="minor" checked="{{deviceCondition === 'minor'}}" />轻微损坏
+            </label>
+            <label class="radio-item">
+              <radio value="serious" checked="{{deviceCondition === 'serious'}}" />严重损坏
+            </label>
+          </radio-group>
+        </view>
+        <view class="form-group">
+          <text class="form-label">备注说明</text>
+          <textarea 
+            class="form-textarea" 
+            placeholder="请输入备注信息（可选）"
+            bindinput="onRemarkInput"
+            value="{{returnRemark}}"
+            maxlength="200"
+          ></textarea>
+        </view>
+      </view>
+      
+      <!-- 操作按钮 -->
+      <view class="device-actions">
+        <button 
+          class="action-btn primary-btn"
+          bindtap="showReturnForm"
+          data-id="{{item.id}}"
+          wx:if="{{currentReturnDevice !== item.id}}"
+        >
+          归还设备
+        </button>
+        
+        <view class="form-actions" wx:if="{{currentReturnDevice === item.id}}">
+          <button 
+            class="action-btn cancel-btn"
+            bindtap="cancelReturn"
+          >
+            取消
+          </button>
+          <button 
+            class="action-btn confirm-btn"
+            bindtap="confirmReturn"
+            data-id="{{item.id}}"
+          >
+            确认归还
+          </button>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{rentedDevices.length === 0 && !loading}}">
+      <image src="/assets/images/no-equipment.png" mode="aspectFit" class="empty-icon"></image>
+      <text class="empty-text">暂无租借中的设备</text>
+    </view>
+  </scroll-view>
+</view>

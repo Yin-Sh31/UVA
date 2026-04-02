@@ -1,0 +1,113 @@
+/* 飞手我的租借记录页面样式 */
+.container {
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.content-container {
+  height: calc(100vh - 60px);
+}
+
+.loading-state, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300rpx;
+  color: #999;
+}
+
+.loading-spinner {
+  width: 50rpx;
+  height: 50rpx;
+  border: 3rpx solid #f3f3f3;
+  border-top: 3rpx solid #007AFF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20rpx;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.rental-list {
+  padding: 20rpx;
+}
+
+.rental-item {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.rental-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+}
+
+.device-info {
+  flex: 1;
+}
+
+.device-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.device-type {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.status-badge {
+  font-size: 24rpx;
+  font-weight: bold;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+  background-color: rgba(0, 122, 255, 0.1);
+}
+
+.rental-content {
+  border-top: 1rpx solid #f0f0f0;
+  padding-top: 20rpx;
+}
+
+.time-info {
+  margin-bottom: 20rpx;
+}
+
+.time-item {
+  display: flex;
+  margin-bottom: 12rpx;
+}
+
+.time-label {
+  font-size: 26rpx;
+  color: #999;
+  width: 160rpx;
+}
+
+.time-value {
+  font-size: 26rpx;
+  color: #333;
+  flex: 1;
+}
+
+.rental-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.rental-id {
+  font-size: 24rpx;
+  color: #999;
+}

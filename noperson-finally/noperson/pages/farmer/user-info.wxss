@@ -1,0 +1,333 @@
+/* farmer/user-info.wxss */
+
+/* 页面容器 */
+.user-info-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 100rpx 0 30rpx;
+}
+
+/* 头像区域 */
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 0;
+  background-color: #ffffff;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 兼容wxml中使用的avatar-container类 */
+.avatar-container,
+.avatar-wrapper {
+  position: relative;
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 90rpx;
+  overflow: hidden;
+  border: 4rpx solid #f0f0f0;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 90rpx;
+}
+
+/* 头像编辑覆盖层样式 */
+.avatar-edit-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.avatar-container:active .avatar-edit-overlay {
+  opacity: 1;
+}
+
+.avatar-edit-icon {
+  color: #ffffff;
+  font-size: 48rpx;
+}
+
+/* 原有的上传遮罩样式保持不变，兼容其他可能的使用 */
+.avatar-upload-mask {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48rpx;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.avatar-wrapper:active .avatar-upload-mask {
+  opacity: 1;
+}
+
+.avatar-upload-text {
+  color: #ffffff;
+  font-size: 24rpx;
+}
+
+.avatar-tip {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #666;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  transition: all 0.2s;
+}
+
+.avatar-tip:active {
+  background-color: #f5f5f5;
+  color: #1aad19;
+}
+
+/* 表单区域 */
+.form-section {
+  background-color: #ffffff;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  border-radius: 8rpx;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 40rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+/* 增加表单标签宽度，避免在小屏幕上换行 */
+.form-label {
+  width: 200rpx;
+  font-size: 28rpx;
+  color: #666666;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.form-item:active {
+  background-color: #fafafa;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.form-content {
+  flex: 1;
+}
+
+.form-input {
+  width: 100%;
+  font-size: 28rpx;
+  color: #333333;
+  padding: 0;
+  transition: all 0.3s;
+}
+
+/* 地址输入器相关样式 */
+.address-input-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.address-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333333;
+  padding-right: 80rpx;
+}
+
+.address-icon {
+  position: absolute;
+  right: 0;
+  padding: 8rpx 16rpx;
+  background-color: #f0f0f0;
+  border-radius: 4rpx;
+  font-size: 26rpx;
+  color: #666666;
+}
+
+/* 获取位置按钮样式 */
+.get-location-btn {
+  min-width: 140rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 24rpx;
+  padding: 0 20rpx;
+  margin-left: 20rpx;
+}
+
+/* 错误样式 */
+.input-error {
+  color: #e64340;
+  border-bottom: 2rpx solid #e64340;
+}
+
+.error-message {
+  padding: 0 40rpx 10rpx 240rpx;
+  font-size: 24rpx;
+  color: #e64340;
+}
+
+.form-text {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+/* 特殊文本样式 */
+.phone-number {
+  color: #1aad19;
+  font-weight: 500;
+}
+
+.time-text {
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 状态显示区域 */
+.status-display {
+  padding: 20rpx 40rpx;
+  background-color: #f0f0f0;
+  text-align: center;
+  margin: 0 40rpx 20rpx 40rpx;
+  border-radius: 8rpx;
+}
+
+.status-text {
+  font-size: 28rpx;
+  color: #666666;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  padding: 30rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+/* 测试按钮样式 */
+.test-button {
+  background-color: #e6f7ff;
+  color: #1890ff;
+  margin-bottom: 0;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  line-height: 88rpx;
+  transition: background-color 0.2s;
+}
+
+.test-button:active {
+  background-color: #bae7ff;
+}
+
+.primary-button {
+  background-color: #1aad19;
+  color: #ffffff;
+  font-size: 32rpx;
+  border-radius: 8rpx;
+  margin: 0;
+  line-height: 90rpx;
+  font-weight: 600;
+  box-shadow: 0 4rpx 16rpx rgba(26, 173, 25, 0.25);
+  transition: all 0.3s;
+}
+
+.primary-button:active {
+  background-color: #179b16;
+  box-shadow: 0 2rpx 8rpx rgba(26, 173, 25, 0.2);
+  transform: translateY(2rpx);
+}
+
+.primary-button[disabled] {
+  background-color: #ccc;
+  box-shadow: none;
+}
+
+.cancel-button {
+  background-color: #ffffff;
+  color: #666666;
+  font-size: 32rpx;
+  border-radius: 8rpx;
+  margin: 0;
+  line-height: 90rpx;
+  border: 2rpx solid #e0e0e0;
+  transition: all 0.2s;
+}
+
+.cancel-button:active {
+  background-color: #f5f5f5;
+  border-color: #c0c0c0;
+}
+
+/* 编辑模式特定样式 */
+.form-input[disabled] {
+  background-color: transparent;
+  color: #999999;
+}
+
+/* 查看模式特定样式 */
+.form-text {
+  font-size: 28rpx;
+  color: #333333;
+  word-break: break-all;
+  padding: 4rpx 0;
+}
+
+/* 状态显示区域样式增强 */
+.status-display {
+  padding: 20rpx 40rpx;
+  background-color: #f0f0f0;
+  text-align: center;
+  margin: 0 40rpx 24rpx 40rpx;
+  border-radius: 8rpx;
+}
+
+.status-text {
+  font-size: 28rpx;
+  color: #666666;
+  font-weight: 500;
+}
+
+/* 隐藏原生按钮的边框 */
+button::after {
+  border: none;
+}
+
+/* 加载状态遮罩 */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}

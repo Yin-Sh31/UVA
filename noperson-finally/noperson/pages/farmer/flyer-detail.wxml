@@ -1,0 +1,166 @@
+<!-- farmer/flyer-detail.wxml -->
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <view class="fixed-header">
+    <navigation-bar back="true" title="飞手详情"></navigation-bar>
+  </view>
+  
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+  
+  <!-- 错误状态 -->
+  <view class="error-state" wx:if="{{error}}">
+    <text>{{errorMsg || '加载失败'}}</text>
+    <button class="retry-btn" bindtap="loadFlyerDetail">重新加载</button>
+  </view>
+  
+  <!-- 飞手详情内容 -->
+  <view class="content" wx:if="{{!loading && !error && flyerDetail}}">
+    <!-- 飞手基本信息 -->
+    <view class="basic-info">
+      <view class="avatar-section">
+        <image class="avatar" src="{{flyerDetail.avatar || '/assets/images/user-avatar.png'}}" mode="aspectFill"></image>
+        <view class="status-badge {{flyerDetail.isFree ? 'status-free' : 'status-busy'}}">
+          {{flyerDetail.isFree ? '空闲' : '繁忙'}}
+        </view>
+      </view>
+      
+      <view class="info-section">
+        <view class="name-rating">
+          <text class="name">{{flyerDetail.userName}}</text>
+          <view class="rating">
+            <text class="rating-value">{{flyerDetail.formattedRating || flyerDetail.reputation}}</text>
+            <view class="star-container">
+              <text class="star" wx:for="{{5}}" wx:key="index" wx:if="{{index < flyerDetail.starLevel}}">★</text>
+              <text class="star empty" wx:for="{{5}}" wx:key="index" wx:if="{{index >= flyerDetail.starLevel}}">★</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="meta-info">
+          <view class="meta-item">
+            <text class="meta-label">已完成:</text>
+            <text class="meta-value">{{flyerDetail.completedOrders || 0}}单</text>
+          </view>
+          <view class="meta-item">
+            <text class="meta-label">评价:</text>
+            <text class="meta-value">{{flyerDetail.evaluationCount || 0}}条</text>
+          </view>
+          <view class="meta-item">
+            <text class="meta-label">好评率:</text>
+            <text class="meta-value positive">{{flyerDetail.positiveRate || 0}}%</text>
+          </view>
+        </view>
+        
+        <view class="contact-info" wx:if="{{flyerDetail.phone}}">
+          <view class="contact-item">
+            <text class="contact-label">联系方式:</text>
+            <text class="contact-value">{{flyerDetail.phone}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 资质信息 -->
+    <view class="qualification-section" wx:if="{{flyerDetail.licenseType}}">
+      <view class="section-title">资质信息</view>
+      <view class="qualification-item">
+        <text class="qualification-label">执照类型:</text>
+        <text class="qualification-value">{{flyerDetail.licenseType}}</text>
+      </view>
+      <view class="qualification-item" wx:if="{{flyerDetail.licenseNo}}">
+        <text class="qualification-label">执照编号:</text>
+        <text class="qualification-value">{{flyerDetail.licenseNo}}</text>
+      </view>
+    </view>
+    
+    <!-- 技能信息 -->
+    <view class="skill-section">
+      <view class="section-title">技能信息</view>
+      <view class="skill-item">
+        <text class="skill-label">擅长技能:</text>
+        <text class="skill-value">{{flyerDetail.skillLevel || '通用作业'}}</text>
+      </view>
+      <view class="skill-item">
+        <text class="skill-label">作业价格:</text>
+        <text class="skill-value">{{flyerDetail.pricePerAcre || '未设置'}}元/亩</text>
+      </view>
+    </view>
+    
+    <!-- 个人简介 -->
+    <view class="intro-section" wx:if="{{flyerDetail.introduction}}">
+      <view class="section-title">个人简介</view>
+      <text class="introduction">{{flyerDetail.introduction}}</text>
+    </view>
+    
+    <!-- 经验信息 -->
+    <view class="experience-section" wx:if="{{flyerDetail.experience}}">
+      <view class="section-title">工作经验</view>
+      <text class="experience">{{flyerDetail.experience}}</text>
+    </view>
+    
+    <!-- 评价列表 -->
+    <view class="evaluation-section">
+      <view class="section-title">用户评价</view>
+      
+      <!-- 加载状态 -->
+      <view class="evaluations-loading" wx:if="{{evaluationsLoading}}">
+        <text>加载评价中...</text>
+      </view>
+      
+      <!-- 评价列表 -->
+      <view class="evaluations-list" wx:else>
+        <view class="evaluation-item" wx:for="{{evaluations}}" wx:key="id">
+          <view class="evaluation-header">
+            <view class="evaluation-rating">
+              <view class="star-container">
+                <text class="star" wx:for="{{5}}" wx:key="index" wx:if="{{index < item.averageScore}}">★</text>
+                <text class="star empty" wx:for="{{5}}" wx:key="index" wx:if="{{index >= item.averageScore}}">★</text>
+              </view>
+              <text class="evaluation-score">{{item.averageScore}}</text>
+            </view>
+            <text class="evaluation-time">{{item.createdAt}}</text>
+          </view>
+          
+          <view class="evaluation-details" wx:if="{{item.comment}}">
+            <text class="evaluation-comment">{{item.comment}}</text>
+          </view>
+          
+          <view class="evaluation-scores">
+            <view class="score-item">
+              <text class="score-label">作业质量:</text>
+              <text class="score-value">{{item.scoreQuality}}分</text>
+            </view>
+            <view class="score-item">
+              <text class="score-label">准时性:</text>
+              <text class="score-value">{{item.scorePunctuality}}分</text>
+            </view>
+            <view class="score-item">
+              <text class="score-label">服务态度:</text>
+              <text class="score-value">{{item.scoreAttitude}}分</text>
+            </view>
+            <view class="score-item">
+              <text class="score-label">作业效率:</text>
+              <text class="score-value">{{item.scoreEfficiency}}分</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 空状态 -->
+        <view class="empty-evaluations" wx:if="{{evaluations.length === 0}}">
+          <text>暂无评价</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 底部操作按钮 -->
+    <view class="bottom-actions">
+      <button class="contact-btn" bindtap="contactFlyer">联系飞手</button>
+      <button class="invite-btn {{flyerDetail.isFree ? '' : 'disabled'}}" bindtap="inviteFlyer" disabled="{{!flyerDetail.isFree}}">
+        {{flyerDetail.isFree ? '邀请接单' : '繁忙'}}
+      </button>
+    </view>
+  </view>
+</view>

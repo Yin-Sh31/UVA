@@ -1,0 +1,157 @@
+<!-- flyer/upload-inspection/index.wxml -->
+<view class="container">
+  <!-- 导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="navigateBack">
+      <image src="/assets/images/back.png" mode="aspectFit"></image>
+    </view>
+    <view class="nav-title">上传巡检报告</view>
+    <view class="nav-right"></view>
+  </view>
+  
+  <!-- 订单信息卡片 -->
+  <view class="order-card" wx:if="{{orderInfo}}">
+    <view class="order-header">
+      <view class="order-id">订单编号：{{orderInfo.id}}</view>
+      <view class="order-status">待上传报告</view>
+    </view>
+    <view class="order-info">
+      <view class="info-row">
+        <view class="info-label">农户名称：</view>
+        <view class="info-value">{{orderInfo.farmerName}}</view>
+      </view>
+      <view class="info-row">
+        <view class="info-label">农场名称：</view>
+        <view class="info-value">{{orderInfo.farmName}}</view>
+      </view>
+      <view class="info-row">
+        <view class="info-label">巡检面积：</view>
+        <view class="info-value">{{orderInfo.inspectionArea || 0}} 亩</view>
+      </view>
+      <view class="info-row">
+        <view class="info-label">订单金额：</view>
+        <view class="info-value amount">{{orderInfo.amount || 0}} 元</view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 巡检报告表单 -->
+  <scroll-view 
+    class="form-scroll"
+    scroll-y
+    refresher-enabled
+    bindrefresherrefresh="onRefresh"
+    refresher-triggered="{{refreshing}}"
+  >
+    <view class="form-container">
+      <!-- 作物生长状态 -->
+      <view class="input-group">
+        <view class="input-label">作物生长状态 <text class="required">*</text></view>
+        <textarea 
+          class="textarea {{formErrors.growthStatus ? 'error' : ''}}"
+          placeholder="请详细描述作物的生长状况"
+          value="{{inspectionData.growthStatus}}"
+          bindinput="onInputChange"
+          data-field="growthStatus"
+          auto-height
+        ></textarea>
+        <view class="error-tip" wx:if="{{formErrors.growthStatus}}">{{formErrors.growthStatus}}</view>
+      </view>
+      
+      <!-- 病虫害情况 -->
+      <view class="input-group">
+        <view class="input-label">病虫害情况 <text class="required">*</text></view>
+        <textarea 
+          class="textarea {{formErrors.pestSituation ? 'error' : ''}}"
+          placeholder="请详细描述病虫害的发现情况"
+          value="{{inspectionData.pestSituation}}"
+          bindinput="onInputChange"
+          data-field="pestSituation"
+          auto-height
+        ></textarea>
+        <view class="error-tip" wx:if="{{formErrors.pestSituation}}">{{formErrors.pestSituation}}</view>
+      </view>
+      
+      <!-- 建议 -->
+      <view class="input-group">
+        <view class="input-label">建议 <text class="required">*</text></view>
+        <textarea 
+          class="textarea {{formErrors.suggestions ? 'error' : ''}}"
+          placeholder="请提供相应的防治或管理建议"
+          value="{{inspectionData.suggestions}}"
+          bindinput="onInputChange"
+          data-field="suggestions"
+          auto-height
+        ></textarea>
+        <view class="error-tip" wx:if="{{formErrors.suggestions}}">{{formErrors.suggestions}}</view>
+      </view>
+      
+      <!-- 预估产量 -->
+      <view class="input-group">
+        <view class="input-label">预估产量</view>
+        <input 
+          class="input"
+          type="digit"
+          placeholder="请输入预估产量（单位：斤/亩）"
+          value="{{inspectionData.yieldEstimate}}"
+          bindinput="onInputChange"
+          data-field="yieldEstimate"
+        ></input>
+      </view>
+      
+      <!-- 天气状况 -->
+      <view class="input-group">
+        <view class="input-label">天气状况</view>
+        <input 
+          class="input"
+          type="text"
+          placeholder="请输入巡检时的天气状况"
+          value="{{inspectionData.weatherCondition}}"
+          bindinput="onInputChange"
+          data-field="weatherCondition"
+        ></input>
+      </view>
+      
+      <!-- 图片上传 -->
+      <view class="input-group">
+        <view class="input-label">巡检照片 <text class="required">*</text></view>
+        <view class="image-upload-container">
+          <!-- 已上传的图片 -->
+          <view 
+            class="image-item"
+            wx:for="{{imageList}}"
+            wx:key="index"
+            wx:for-item="image"
+          >
+            <image src="{{image}}" mode="aspectFill"></image>
+            <view class="delete-btn" bindtap="deleteImage" data-index="{{index}}">
+              <image src="/assets/images/delete.png" mode="aspectFit"></image>
+            </view>
+          </view>
+          
+          <!-- 上传按钮 -->
+          <view 
+            class="upload-btn"
+            bindtap="uploadImage"
+            wx:if="{{imageList.length < 9}}"
+          >
+            <image src="/assets/images/upload.png" mode="aspectFit"></image>
+            <text>添加图片</text>
+          </view>
+        </view>
+        <view class="error-tip" wx:if="{{formErrors.imageList}}">{{formErrors.imageList}}</view>
+        <view class="tip-text">最多上传9张图片，支持jpg、png格式</view>
+      </view>
+      
+      <!-- 提交按钮 -->
+      <button 
+        class="submit-btn"
+        disabled="{{submitting}}"
+        loading="{{submitting}}"
+        bindtap="submitInspection"
+      >
+        提交巡检报告
+      </button>
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,91 @@
+<!-- flyer/device-rent/index.wxml -->
+<view class="device-rent-container">
+  <navigation-bar title="设备租借" back="true" color="black" background="#FFF"></navigation-bar>
+  
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+  
+  <!-- 错误状态 -->
+  <view class="error-container" wx:if="{{error && !loading}}">
+    <image src="/assets/images/error-icon.png" mode="aspectFit" class="error-icon"></image>
+    <text class="error-text">{{error}}</text>
+    <button class="retry-btn" bindtap="loadDeviceList">重试</button>
+  </view>
+  
+  <!-- 设备列表 -->
+  <scroll-view 
+    class="device-list" 
+    wx:if="{{!loading && !error}}"
+    scroll-y
+    refresher-enabled="true"
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onRefresh"
+  >
+    <view class="device-item" wx:for="{{deviceList}}" wx:key="id">
+      <!-- 设备基本信息 -->
+      <view class="device-header">
+        <view class="device-title">
+          <text class="device-name">{{item.name || '无人机'}}</text>
+          <text class="device-type">{{item.type || '未知型号'}}</text>
+        </view>
+        <text class="device-status" wx:if="{{item.status === 'available'}}">可租借</text>
+      </view>
+      
+      <!-- 设备详情 -->
+      <view class="device-details">
+        <view class="detail-row">
+          <text class="detail-label">设备编号：</text>
+          <text class="detail-value">{{item.id}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">设备状态：</text>
+          <text class="detail-value">{{getStatusText(item.status)}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">飞行小时：</text>
+          <text class="detail-value">{{item.flightHours || 0}} h</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">最近维护：</text>
+          <text class="detail-value">{{item.lastMaintenanceDate || '从未维护'}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">租借费用：</text>
+          <text class="detail-value price">{{item.rentPrice || 0}} 元/天</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">设备描述：</text>
+          <text class="detail-value">{{item.description || '--'}}</text>
+        </view>
+      </view>
+      
+      <!-- 操作按钮 -->
+      <view class="device-actions">
+        <button 
+          class="action-btn rent-btn" 
+          bindtap="rentDevice" 
+          data-id="{{item.id}}" 
+          wx:if="{{item.status === 'available'}}"
+        >
+          立即租借
+        </button>
+        <button 
+          class="action-btn disabled-btn" 
+          disabled 
+          wx:else
+        >
+          {{getStatusText(item.status)}}
+        </button>
+      </view>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{deviceList.length === 0 && !loading}}">
+      <image src="/assets/images/no-equipment.png" mode="aspectFit" class="empty-icon"></image>
+      <text class="empty-text">暂无可租借设备</text>
+    </view>
+  </scroll-view>
+</view>

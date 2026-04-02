@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cty.nopersonfinally.mapper.DemandMapper">
+
+    <!-- 插入订单需求 -->
+    <insert id="insertOrder">
+        INSERT INTO demand
+        (farmer_id, flyer_id, report_id, device_id, land_id, land_name, land_boundary, crop_type, pest_type, 
+        inspection_purpose, expected_resolution, land_location, land_area, expected_time, budget, status, 
+        order_type, accept_time, start_time, complete_time, cancel_time, cancel_reason, create_time, 
+        update_time, payment_amount, payment_status, payment_time, payment_method, payment_record_id)
+        VALUES 
+        (#{farmerId}, #{flyerId}, #{reportId}, #{deviceId}, #{landId}, #{landName}, #{landBoundary}, #{cropType}, #{pestType}, 
+        #{inspectionPurpose}, #{expectedResolution}, #{landLocation}, #{landArea}, #{expectedTime}, #{budget}, #{status}, 
+        #{orderType}, #{acceptTime}, #{startTime}, #{completeTime}, #{cancelTime}, #{cancelReason}, #{createTime}, 
+        #{updateTime}, #{paymentAmount}, #{paymentStatus}, #{paymentTime}, #{paymentMethod}, #{paymentRecordId})
+    </insert>
+
+</mapper>

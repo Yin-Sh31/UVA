@@ -1,0 +1,298 @@
+/* pages/auth/login.wxss */
+page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1aad19 0%, #f8f8f8 30%);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 0 60rpx;
+  background: transparent;
+  color: #fff;
+}
+
+.logo {
+  width: 180rpx;
+  height: 180rpx;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 30rpx;
+  margin-bottom: 40rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
+}
+
+.logo-image {
+  width: 140rpx;
+  height: 140rpx;
+}
+
+.title {
+  font-size: 44rpx;
+  font-weight: bold;
+  margin-bottom: 12rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+  font-size: 28rpx;
+  opacity: 0.95;
+  letter-spacing: 1rpx;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 40rpx 40rpx;
+  background-color: #f8f8f8;
+}
+
+.form-container {
+  background-color: #fff;
+  border-radius: 24rpx;
+  padding: 48rpx 40rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+  margin-bottom: 30rpx;
+}
+
+/* 登录方式切换 */
+.login-type-switch {
+  display: flex;
+  background: linear-gradient(to right, #f5f5f5, #fafafa);
+  border-radius: 12rpx;
+  padding: 8rpx;
+  margin-bottom: 40rpx;
+}
+
+.login-type-item {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 30rpx;
+  color: #666;
+  position: relative;
+  border-radius: 8rpx;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.login-type-item.active {
+  color: #1aad19;
+  font-weight: bold;
+  background-color: #fff;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+}
+
+.login-type-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 6rpx;
+  background: linear-gradient(to right, #1aad19, #16a085);
+  border-radius: 3rpx;
+}
+
+.form-item {
+  margin-bottom: 36rpx;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(to right, #fafafa, #fff);
+  border: 2rpx solid #f0f0f0;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  position: relative;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within {
+  border-color: #1aad19;
+  background: #fff;
+  box-shadow: 0 0 0 4rpx rgba(26, 173, 25, 0.1);
+}
+
+/* 显示/隐藏密码按钮 */
+.toggle-password {
+  position: absolute;
+  right: 24rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #1aad19;
+  font-size: 26rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  background: rgba(26, 173, 25, 0.1);
+  transition: all 0.3s ease;
+}
+
+.toggle-password:active {
+  background: rgba(26, 173, 25, 0.2);
+}
+
+/* 验证码输入样式 */
+.code-input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.code-input {
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.send-code-btn {
+  padding: 20rpx 28rpx;
+  background: linear-gradient(135deg, #1aad19, #16a085);
+  border-radius: 12rpx;
+  color: #fff;
+  font-size: 26rpx;
+  text-align: center;
+  min-width: 220rpx;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(26, 173, 25, 0.3);
+  transition: all 0.3s ease;
+}
+
+.send-code-btn.disabled,
+.send-code-btn[disabled] {
+  background: linear-gradient(135deg, #e0e0e0, #d0d0d0);
+  color: #999;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.input-label {
+  width: 100rpx;
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.input {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+  padding: 8rpx 0;
+}
+
+.role-selector {
+  display: flex;
+  justify-content: space-around;
+  margin: 48rpx 0;
+  gap: 40rpx;
+}
+
+.role-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32rpx 24rpx;
+  border-radius: 20rpx;
+  width: 180rpx;
+  transition: all 0.3s ease;
+  border: 2rpx solid transparent;
+  background: linear-gradient(135deg, #fafafa, #fff);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.role-item.active {
+  background: linear-gradient(135deg, #e6f7e6, #f0fff0);
+  border: 2rpx solid #1aad19;
+  transform: translateY(-4rpx);
+  box-shadow: 0 8rpx 20rpx rgba(26, 173, 25, 0.2);
+}
+
+.role-icon {
+  width: 88rpx;
+  height: 88rpx;
+  margin-bottom: 16rpx;
+  border-radius: 16rpx;
+}
+
+.role-text {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.role-item.active .role-text {
+  color: #1aad19;
+  font-weight: bold;
+}
+
+.login-btn {
+  background: linear-gradient(135deg, #1aad19, #16a085);
+  color: #fff;
+  border-radius: 48rpx;
+  font-size: 34rpx;
+  font-weight: bold;
+  padding: 28rpx;
+  text-align: center;
+  margin-top: 48rpx;
+  box-shadow: 0 8rpx 24rpx rgba(26, 173, 25, 0.35);
+  transition: all 0.3s ease;
+  letter-spacing: 2rpx;
+}
+
+.login-btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+  box-shadow: 0 4rpx 12rpx rgba(26, 173, 25, 0.25);
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 36rpx;
+  font-size: 30rpx;
+  color: #1aad19;
+  font-weight: 500;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  background: linear-gradient(to right, rgba(26, 173, 25, 0.05), rgba(22, 160, 133, 0.05));
+  transition: all 0.3s ease;
+}
+
+.register-link:active {
+  background: linear-gradient(to right, rgba(26, 173, 25, 0.1), rgba(22, 160, 133, 0.1));
+}
+
+.forgot-password {
+  text-align: right;
+  margin-top: 24rpx;
+  font-size: 28rpx;
+  color: #666;
+  padding: 12rpx 0;
+}
+
+.footer {
+  text-align: center;
+  padding: 40rpx 0;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.footer-text {
+  display: block;
+  margin-bottom: 8rpx;
+  letter-spacing: 1rpx;
+}

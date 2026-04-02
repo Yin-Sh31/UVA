@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cty.nopersonfinally.mapper.DeviceActivityMapper">
+
+    <resultMap id="DeviceActivityResultMap" type="com.cty.nopersonfinally.pojo.entity.DeviceActivity">
+        <id property="activityId" column="activity_id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="activityType" column="activity_type"/>
+        <result property="activityDesc" column="activity_desc"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="operatorName" column="operator_name"/>
+        <result property="beforeStatus" column="before_status"/>
+        <result property="afterStatus" column="after_status"/>
+        <result property="createTime" column="create_time"/>
+        <association property="device" javaType="com.cty.nopersonfinally.pojo.entity.DroneDevice">
+            <id property="deviceId" column="d_device_id"/>
+            <result property="deviceName" column="d_device_name"/>
+            <result property="model" column="d_model"/>
+            <result property="status" column="d_status"/>
+        </association>
+    </resultMap>
+
+    <!-- 分页查询最近设备动态 -->
+    <select id="selectRecentActivities" resultMap="DeviceActivityResultMap">
+        SELECT 
+            da.*, 
+            d.device_id as d_device_id, 
+            d.device_name as d_device_name, 
+            d.model as d_model, 
+            d.status as d_status
+        FROM device_activity da
+        LEFT JOIN drone_device d ON da.device_id = d.device_id
+        WHERE 1=1
+        <if test="deviceId != null">
+            AND da.device_id = #{deviceId}
+        </if>
+        <if test="activityTypes != null and activityTypes.size > 0">
+            AND da.activity_type IN
+            <foreach collection="activityTypes" item="type" open="(" close=")" separator=",">
+                #{type}
+            </foreach>
+        </if>
+        ORDER BY da.create_time DESC
+    </select>
+
+    <!-- 查询指定设备的最近动态 -->
+    <select id="selectDeviceRecentActivities" resultMap="DeviceActivityResultMap">
+        SELECT 
+            da.*, 
+            d.device_id as d_device_id, 
+            d.device_name as d_device_name, 
+            d.model as d_model, 
+            d.status as d_status
+        FROM device_activity da
+        LEFT JOIN drone_device d ON da.device_id = d.device_id
+        WHERE da.device_id = #{deviceId}
+        ORDER BY da.create_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 查询用户相关设备的动态 -->
+    <select id="selectUserRelatedActivities" resultMap="DeviceActivityResultMap">
+        SELECT 
+            da.*, 
+            d.device_id as d_device_id, 
+            d.device_name as d_device_name, 
+            d.model as d_model, 
+            d.status as d_status
+        FROM device_activity da
+        LEFT JOIN drone_device d ON da.device_id = d.device_id
+        WHERE d.owner_id = #{userId} OR da.operator_id = #{userId} OR d.    flyer_id = #{userId}
+        ORDER BY da.create_time DESC
+        LIMIT #{limit}
+    </select>
+</mapper>

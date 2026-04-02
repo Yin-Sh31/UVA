@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cty.nopersonfinally.mapper.UserFlyerMapper">
+
+    <!-- 批量查询飞手 -->
+    <select id="selectBatchIds" parameterType="java.util.List" resultType="com.cty.nopersonfinally.pojo.entity.UserFlyer">
+        SELECT u.* FROM user_flyer u
+        WHERE u.user_id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND u.user_id IN (SELECT user_id FROM sys_user WHERE is_deleted = 0)
+    </select>
+
+    <!-- 根据用户ID查询飞手信息 -->
+    <select id="selectByUserId" resultType="com.cty.nopersonfinally.pojo.entity.UserFlyer">
+        SELECT u.* FROM user_flyer u
+        WHERE u.user_id = #{userId}
+        AND u.user_id IN (SELECT user_id FROM sys_user WHERE is_deleted = 0)
+    </select>
+
+    <!-- 分页查询符合条件的飞手 -->
+    <select id="selectPageByCondition" resultType="com.cty.nopersonfinally.pojo.entity.UserFlyer">
+        SELECT u.* FROM user_flyer u
+        <where>
+            u.user_id IN (SELECT user_id FROM sys_user WHERE is_deleted = 0)
+            <if test="ew != null and ew.sqlSegment != null and ew.sqlSegment != ''">
+                AND ${ew.sqlSegment}
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据技能等级和审核状态查询飞手 -->
+    <select id="selectBySkillAndAudit" resultType="com.cty.nopersonfinally.pojo.entity.UserFlyer">
+        SELECT u.* FROM user_flyer u
+        WHERE u.skill_level = #{skillLevel} AND u.audit_status = #{auditStatus}
+        AND u.user_id IN (SELECT user_id FROM sys_user WHERE is_deleted = 0)
+    </select>
+
+</mapper>

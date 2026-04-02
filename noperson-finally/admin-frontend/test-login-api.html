@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录API测试</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            width: 200px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            text-align: left;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>登录API测试</h1>
+    <div>
+        <input type="text" id="username" placeholder="用户名" value="admin">
+    </div>
+    <div>
+        <input type="password" id="password" placeholder="密码" value="123456">
+    </div>
+    <button onclick="testLogin()">测试登录</button>
+    <button onclick="testConnection()">测试连接</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        function log(message) {
+            const resultDiv = document.getElementById('result');
+            if (typeof message === 'object') {
+                resultDiv.innerHTML += JSON.stringify(message) + '\n';
+                console.log(message);
+            } else {
+                resultDiv.innerHTML += message + '\n';
+                console.log(message);
+            }
+        }
+        
+        function clearLog() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '';
+        }
+        
+        function testConnection() {
+            clearLog();
+            log('开始测试API连接...');
+            
+            // 直接使用fetch API测试连接
+            fetch('/api/auth/test', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                log('连接测试响应状态: ' + response.status);
+                log('响应状态文本: ' + response.statusText);
+                return response.text().then(text => {
+                    try {
+                        return { isJson: true, data: JSON.parse(text) };
+                    } catch (e) {
+                        return { isJson: false, data: text };
+                    }
+                });
+            })
+            .then(data => {
+                log('连接测试响应数据: ' + JSON.stringify(data.data));
+            })
+            .catch(error => {
+                log('连接测试失败: ' + error.message);
+                if (error.stack) {
+                    log('错误堆栈: ' + error.stack);
+                }
+            });
+        }
+        
+        function testLogin() {
+            clearLog();
+            log('开始测试登录...');
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // 确保包含所有必需的字段
+            const loginData = {
+                username: username,
+                password: password,
+                loginType: 'password',  // 管理员只支持密码登录
+                role: 'admin'          // 指定管理员角色
+            };
+            
+            log('发送的请求数据: ' + JSON.stringify(loginData));
+            
+            // 使用fetch API
+            fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            })
+            .then(response => {
+                log('登录测试响应状态: ' + response.status);
+                log('响应状态文本: ' + response.statusText);
+                return response.text().then(text => {
+                    try {
+                        return { isJson: true, data: JSON.parse(text) };
+                    } catch (e) {
+                        return { isJson: false, data: text };
+                    }
+                });
+            })
+            .then(data => {
+                log('登录测试响应数据: ' + JSON.stringify(data.data));
+            })
+            .catch(error => {
+                log('登录测试失败: ' + error.message);
+                if (error.stack) {
+                    log('错误堆栈: ' + error.stack);
+                }
+            });
+            
+            // 使用axios
+            axios({
+                method: 'post',
+                url: '/api/auth/login',
+                data: loginData,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                log('Axios登录测试响应: ' + JSON.stringify(response.data));
+            })
+            .catch(error => {
+                log('Axios登录测试失败: ' + error.message);
+                if (error.response) {
+                    log('错误响应数据: ' + JSON.stringify(error.response.data));
+                }
+            });
+        }
+    </script>
+</body>
+</html>

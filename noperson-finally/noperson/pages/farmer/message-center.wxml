@@ -1,0 +1,250 @@
+<!-- farmer/message-center.wxml -->
+<navigation-bar 
+  title="消息中心"
+  background="#ffffff"
+  color="#333333"
+  back="false"
+/>
+
+<view class="message-container">
+  <!-- 消息类型过滤器 -->
+  <view class="message-filter">
+    <view class="filter-item {{currentFilter === 'all' ? 'active' : ''}}" bindtap="filterMessagesByType" data-type="all">
+      <text>全部</text>
+    </view>
+    <view class="filter-item {{currentFilter === 'demand' ? 'active' : ''}}" bindtap="filterMessagesByType" data-type="demand">
+      <text>作业需求</text>
+    </view>
+    <view class="filter-item {{currentFilter === 'order' ? 'active' : ''}}" bindtap="filterMessagesByType" data-type="order">
+      <text>订单通知</text>
+    </view>
+    <view class="filter-item {{currentFilter === 'payment' ? 'active' : ''}}" bindtap="filterMessagesByType" data-type="payment">
+      <text>支付提醒</text>
+    </view>
+  </view>
+  <!-- 消息列表 -->
+  <scroll-view 
+    class="message-list"
+    scroll-y
+    enable-back-to-top
+    bindscrolltolower="onReachBottom"
+    bindrefresherpulling="onPullDownRefresh"
+    refresher-enabled="true"
+    refresher-threshold="100"
+    refresher-triggered="{{refreshing}}"
+    refresher-background="#f8f8f8"
+  >
+    <!-- 缓存数据显示 -->
+    <block wx:if="{{cachedMessageList.length > 0 && messageList.length === 0}}">
+      <view class="cached-data-hint">
+        <text class="hint-text">显示缓存消息，正在更新最新数据...</text>
+      </view>
+      
+      <!-- 缓存消息的分组显示 -->
+      <view>
+        <!-- 缓存数据 - 今天 -->
+        <block wx:if="{{hasTodayMessages}}">
+          <view class="date-divider">今天</view>
+          <view 
+          wx:for="{{todayMessages}}" 
+          wx:for-item="item" 
+          wx:key="id" 
+          class="message-item {{item.isRead ? 'read' : 'unread'}}"
+          hover-class="message-item-hover">
+            <!-- 消息图标 -->
+            <view class="message-icon {{item.type}}">
+              <image 
+                src="{{item.icon || (item.type === 'demand' ? '/images/demand-icon.png' : item.type === 'order' ? '/images/order-icon.png' : item.type === 'payment' ? '/assets/images/payment-icon.svg' : '/assets/images/system-icon.svg')}}" 
+                mode="aspectFit"
+              ></image>
+            </view>
+            <view class="message-content">
+              <view class="message-header">
+                <text class="message-title">{{item.title}}</text>
+                <text class="message-time">{{item.formattedTime || item.time}}</text>
+              </view>
+              <text class="message-text">{{item.content}}</text>
+              <text class="message-from" wx:if="{{item.demandName}}">相关需求：{{item.demandName}}</text>
+            </view>
+            <view class="unread-mark" wx:if="{{!item.isRead}}"></view>
+          </view>
+        </block>
+      </view>
+    </block>
+    
+    <!-- 按时间分组的消息列表 -->
+    <view wx:if="{{messageList.length > 0}}">
+      <!-- 今天 -->
+      <block wx:if="{{hasTodayMessages}}">
+        <view class="date-divider">今天</view>
+        <view 
+          wx:for="{{todayMessages}}" 
+          wx:for-item="item" 
+          wx:key="id" 
+          class="message-item {{item.isRead ? 'read' : 'unread'}}"
+          bindtap="viewMessageDetail"
+          data-id="{{item.id}}"
+        >
+          <!-- 消息图标 -->
+          <view class="message-icon {{item.type}}">
+            <image 
+              src="{{item.type === 'demand' ? '/images/demand-icon.png' : item.type === 'order' ? '/images/order-icon.png' : item.type === 'payment' ? '/assets/images/payment-icon.svg' : '/assets/images/system-icon.svg'}}" 
+              mode="aspectFit"
+            ></image>
+          </view>
+          
+          <!-- 消息内容 -->
+            <view class="message-content">
+              <view class="message-header">
+                <text class="message-title">{{item.title}}</text>
+                <text class="message-time">{{item.formattedTime || formatTimeForMessage(item.time) || item.time}}</text>
+              </view>
+              <text class="message-text">{{item.content}}</text>
+              <text class="message-from" wx:if="{{item.demandName}}">相关需求：{{item.demandName}}</text>
+              <!-- 操作按钮提示 -->
+              <view class="message-action-hint" wx:if="{{item.type === 'payment'}}">
+                <text class="action-text">点击查看详情</text>
+              </view>
+            </view>
+          
+          <!-- 未读标记 -->
+          <view class="unread-mark" wx:if="{{!item.isRead}}"></view>
+        </view>
+      </block>
+      
+      <!-- 昨天 -->
+      <block wx:if="{{hasYesterdayMessages}}">
+        <view class="date-divider">昨天</view>
+        <view 
+          wx:for="{{yesterdayMessages}}" 
+          wx:for-item="item" 
+          wx:key="id" 
+          class="message-item {{item.isRead ? 'read' : 'unread'}}"
+          hover-class="message-item-hover">
+          bindtap="viewMessageDetail"
+          data-id="{{item.id}}"
+        >
+          <!-- 消息图标 -->
+          <view class="message-icon {{item.type}}">
+            <image 
+              src="{{item.type === 'demand' ? '/images/demand-icon.png' : item.type === 'order' ? '/images/order-icon.png' : item.type === 'payment' ? '/assets/images/payment-icon.svg' : '/assets/images/system-icon.svg'}}" 
+              mode="aspectFit"
+            ></image>
+          </view>
+          
+          <!-- 消息内容 -->
+          <view class="message-content">
+            <view class="message-header">
+              <text class="message-title">{{item.title}}</text>
+              <text class="message-time">{{item.formattedTime || formatTimeForMessage(item.time) || item.time}}</text>
+            </view>
+            <text class="message-text">{{item.content}}</text>
+            <text class="message-from" wx:if="{{item.demandName}}">相关需求：{{item.demandName}}</text>
+          </view>
+          
+          <!-- 未读标记 -->
+          <view class="unread-mark" wx:if="{{!item.isRead}}"></view>
+        </view>
+      </block>
+      
+      <!-- 本周 -->
+      <block wx:if="{{hasWeekMessages}}">
+        <view class="date-divider">本周</view>
+        <view 
+          wx:for="{{weekMessages}}" 
+          wx:for-item="item" 
+          wx:key="id" 
+          class="message-item {{item.isRead ? 'read' : 'unread'}}"
+          hover-class="message-item-hover">
+          bindtap="viewMessageDetail"
+          data-id="{{item.id}}"
+        >
+          <!-- 消息图标 -->
+          <view class="message-icon {{item.type}}">
+            <image 
+              src="{{item.type === 'demand' ? '/images/demand-icon.png' : item.type === 'order' ? '/images/order-icon.png' : item.type === 'payment' ? '/assets/images/payment-icon.svg' : '/assets/images/system-icon.svg'}}" 
+              mode="aspectFit"
+            ></image>
+          </view>
+          
+          <!-- 消息内容 -->
+          <view class="message-content">
+            <view class="message-header">
+              <text class="message-title">{{item.title}}</text>
+              <text class="message-time">{{item.time}}</text>
+            </view>
+            <text class="message-text">{{item.content}}</text>
+            <text class="message-from" wx:if="{{item.demandName}}">相关需求：{{item.demandName}}</text>
+          </view>
+          
+          <!-- 未读标记 -->
+          <view class="unread-mark" wx:if="{{!item.isRead}}"></view>
+        </view>
+      </block>
+      
+      <!-- 更早 -->
+      <block wx:if="{{hasEarlierMessages}}">
+        <view class="date-divider">更早</view>
+        <view 
+          wx:for="{{earlierMessages}}" 
+          wx:for-item="item" 
+          wx:key="id" 
+          class="message-item {{item.isRead ? 'read' : 'unread'}}"
+          hover-class="message-item-hover">
+          bindtap="viewMessageDetail"
+          data-id="{{item.id}}"
+        >
+          <!-- 消息图标 -->
+          <view class="message-icon {{item.type}}">
+            <image 
+              src="{{item.type === 'demand' ? '/images/demand-icon.png' : item.type === 'order' ? '/images/order-icon.png' : item.type === 'payment' ? '/assets/images/payment-icon.svg' : '/assets/images/system-icon.svg'}}" 
+              mode="aspectFit"
+            ></image>
+          </view>
+          
+          <!-- 消息内容 -->
+          <view class="message-content">
+            <view class="message-header">
+              <text class="message-title">{{item.title}}</text>
+              <text class="message-time">{{item.time}}</text>
+            </view>
+            <text class="message-text">{{item.content}}</text>
+            <text class="message-from" wx:if="{{item.demandName}}">相关需求：{{item.demandName}}</text>
+          </view>
+          
+          <!-- 未读标记 -->
+          <view class="unread-mark" wx:if="{{!item.isRead}}"></view>
+        </view>
+      </block>
+    </view>
+    
+    <!-- 无消息提示 -->
+    <view class="no-messages" wx:if="{{messageList.length === 0 && !loading && cachedMessageList.length === 0}}">
+      <image src="/assets/images/no-message.svg" mode="aspectFit"></image>
+      <text class="no-message-title">暂无消息</text>
+      <text class="no-message-subtitle">您的消息将显示在这里</text>
+    </view>
+    
+    <!-- 加载失败状态 -->
+    <view class="error-state" wx:if="{{error && !loading}}">
+      <text class="error-text">{{errorMessage || '加载失败'}}</text>
+      <button class="retry-btn" bindtap="loadMessageList">重新加载</button>
+    </view>
+  </scroll-view>
+  
+  <!-- 加载更多 -->
+  <view class="loading-more" wx:if="{{loading && messageList.length > 0}}">
+    <view class="loading-spinner"></view>
+    <text>正在加载更多消息...</text>
+  </view>
+  
+  <!-- 没有更多数据 -->
+  <view class="no-more-data" wx:if="{{!hasMore && messageList.length > 0 && !loading}}">
+    <text>没有更多消息了</text>
+  </view>
+</view>
+
+<!-- 消息提示toast -->
+<view class="message-toast" wx:if="{{showToast}}">
+  <text>{{toastMessage}}</text>
+</view>

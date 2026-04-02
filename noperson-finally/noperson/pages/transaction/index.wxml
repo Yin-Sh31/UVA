@@ -1,0 +1,47 @@
+<!-- pages/transaction/index.wxml -->
+<view class="container">
+  <navigation-bar title="交易记录" back="true" color="black" background="#FFF"></navigation-bar>
+  
+  <!-- 类型选择器 -->
+  <view class="type-selector">
+    <view class="type-item {{selectedType === '' ? 'active' : ''}}" bindtap="switchTransactionType" data-type="">
+      <text>全部</text>
+    </view>
+    <view class="type-item {{selectedType === 'INCOME' ? 'active' : ''}}" bindtap="switchTransactionType" data-type="INCOME">
+      <text>收入</text>
+    </view>
+    <view class="type-item {{selectedType === 'EXPENSE' ? 'active' : ''}}" bindtap="switchTransactionType" data-type="EXPENSE">
+      <text>支出</text>
+    </view>
+  </view>
+  
+  <!-- 交易记录列表 -->
+  <scroll-view scroll-y class="transaction-list" wx:if="!loading && transactionList.length > 0">
+    <view class="transaction-item" wx:for="{{transactionList}}" wx:key="index">
+      <view class="transaction-info">
+        <view class="transaction-header">
+          <text class="transaction-title">{{item.title}}</text>
+          <text class="transaction-amount {{item.type === 'income' ? 'income' : 'expense'}}">
+            {{item.type === 'income' ? '+' : '-'}}{{item.amount}}
+          </text>
+        </view>
+        <view class="transaction-detail">
+          <text class="transaction-time">{{item.createTime}}</text>
+          <text class="transaction-type">{{item.typeText}}</text>
+        </view>
+      </view>
+      <view class="transaction-divider"></view>
+    </view>
+  </scroll-view>
+  
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="!loading && transactionList.length === 0">
+    <image src="/assets/images/no-message.svg" mode="aspectFit"></image>
+    <text>暂无交易记录</text>
+  </view>
+  
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="loading">
+    <text>加载中...</text>
+  </view>
+</view>

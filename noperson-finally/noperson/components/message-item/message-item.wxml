@@ -1,0 +1,45 @@
+<!-- 消息项组件 -->
+<view class="message-item {{isFromSelf ? 'self' : 'other'}}">
+  <!-- 对方消息：头像在左 -->
+  <view class="message-avatar" wx:if="!isFromSelf" bindtap="onAvatarTap">
+    <image src="{{message.senderAvatar || '/assets/images/default-avatar.png'}}" mode="aspectFill"></image>
+  </view>
+  
+  <!-- 消息内容区域 -->
+  <view class="message-content-wrapper">
+    <!-- 对方消息：显示用户名 -->
+    <view class="message-sender" wx:if="!isFromSelf">{{message.senderName || '用户'}}</view>
+    
+    <!-- 消息气泡 -->
+    <view class="message-bubble {{message.messageType === 2 ? 'image-bubble' : ''}}" 
+          bindtap="{{message.messageType === 3 ? 'onOrderTap' : ''}}">
+      
+      <!-- 文本消息 -->
+      <view class="message-text" wx:if="message.messageType === 1">{{message.content}}</view>
+      
+      <!-- 图片消息 -->
+      <view class="message-image-container" wx:if="message.messageType === 2">
+        <image class="message-image" 
+               src="{{message.content}}" 
+               mode="aspectFit" 
+               bindtap="onImageTap" 
+               data-src="{{message.content}}"></image>
+      </view>
+      
+      <!-- 订单相关消息 -->
+      <view class="order-message" wx:if="message.messageType === 3">
+        <view class="order-tag">订单消息</view>
+        <view class="order-content">{{message.content}}</view>
+        <view class="order-id" wx:if="message.relatedOrderId">订单号：{{message.relatedOrderId}}</view>
+      </view>
+    </view>
+    
+    <!-- 消息时间 -->
+    <view class="message-time">{{formattedTime}}</view>
+  </view>
+  
+  <!-- 自己消息：头像在右 -->
+  <view class="message-avatar" wx:if="isFromSelf">
+    <image src="{{message.senderAvatar || '/assets/images/default-avatar.png'}}" mode="aspectFill"></image>
+  </view>
+</view>

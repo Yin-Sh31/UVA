@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cty.nopersonfinally.mapper.PaymentOrderMapper">
+    
+    <!-- 根据外部交易号查询订单 -->
+    <select id="selectByOutTradeNo" parameterType="java.lang.String" resultType="com.cty.nopersonfinally.pojo.entity.PaymentOrder">
+        SELECT * FROM payment_order WHERE out_trade_no = #{outTradeNo}
+    </select>
+    
+    <!-- 根据订单ID和类型查询订单 -->
+    <select id="selectByOrderIdAndType" resultType="com.cty.nopersonfinally.pojo.entity.PaymentOrder">
+        SELECT * FROM payment_order WHERE order_id = #{orderId} AND order_type = #{orderType}
+    </select>
+</mapper>

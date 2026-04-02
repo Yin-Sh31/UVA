@@ -1,0 +1,187 @@
+<!-- view-report.wxml -->
+<view class="view-report-container">
+  <navigation-bar title="查看巡检报告" back="true" color="black" background="#FFF"></navigation-bar>
+  
+  <!-- 缓存数据提示 -->
+  <view class="cached-data-hint" wx:if="{{isCachedData && report}}">
+    <text class="hint-text">显示的是缓存数据，下拉可刷新最新数据</text>
+  </view>
+  
+  <!-- 错误状态 -->
+  <view class="error-state" wx:if="{{error && !report}}">
+    <text class="error-text">{{error}}</text>
+    <button class="retry-btn" bindtap="refreshPage">重新加载</button>
+  </view>
+  
+  <scroll-view class="report-scroll" scroll-y bindscrolltolower="refreshPage">
+    <view class="report-header">
+      <view class="search-group">
+        <input 
+          class="search-input" 
+          type="number" 
+          placeholder="请输入报告ID" 
+          value="{{reportId}}"
+          bindinput="onReportIdInput"
+          disabled="{{loading}}"
+        />
+        <button 
+          class="search-btn" 
+          type="primary"
+          bindtap="queryReport"
+          loading="{{loading}}"
+          disabled="{{loading}}">
+          查询
+        </button>
+      </view>
+    </view>
+    
+    <!-- 报告内容 -->
+    <view class="report-content" wx:if="{{report}}">
+      <!-- 更新时间提示 -->
+      <view class="update-time" wx:if="{{!isCachedData && lastUpdatedTime}}">
+        <text>更新时间：{{lastUpdatedTime}}</text>
+      </view>
+      <!-- 报告基本信息 -->
+      <view class="report-section">
+        <view class="section-title">基本信息</view>
+        <view class="info-item">
+          <text class="info-label">报告编号：</text>
+          <text class="info-value">{{report.id || '暂无'}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">订单编号：</text>
+          <text class="info-value">{{report.orderId || '暂无'}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">地块名称：</text>
+          <text class="info-value">{{report.landName || '暂无'}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">巡检时间：</text>
+          <text class="info-value">{{report.inspectionTime || '暂无'}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">飞手姓名：</text>
+          <text class="info-value">{{report.flyerName || '暂无'}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">报告状态：</text>
+          <text class="info-value status-{{report.status}}">{{reportStatus[report.status] || '未知'}}</text>
+        </view>
+        <!-- 新增：地块面积 -->
+        <view class="info-item" wx:if="{{report.landArea}}">
+          <text class="info-label">地块面积：</text>
+          <text class="info-value">{{report.landArea}} 亩</text>
+        </view>
+        <!-- 新增：巡检时长 -->
+        <view class="info-item" wx:if="{{report.inspectionDuration}}">
+          <text class="info-label">巡检时长：</text>
+          <text class="info-value">{{report.inspectionDuration}} 分钟</text>
+        </view>
+      </view>
+      
+      <!-- 巡检目的和结果 -->
+      <view class="report-section">
+        <view class="section-title">巡检结果</view>
+        <view class="info-item">
+          <text class="info-label">巡检目的：</text>
+          <text class="info-value">{{report.inspectionPurpose || '无'}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">巡检结论：</text>
+          <text class="info-value multi-line">{{report.conclusion || '暂无'}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">建议措施：</text>
+          <text class="info-value multi-line">{{report.suggestions || '暂无'}}</text>
+        </view>
+        <!-- 新增：问题描述 -->
+        <view class="info-item" wx:if="{{report.problemDescription}}">
+          <text class="info-label">问题描述：</text>
+          <text class="info-value multi-line">{{report.problemDescription}}</text>
+        </view>
+        <!-- 新增：处理方案 -->
+        <view class="info-item" wx:if="{{report.solutionPlan}}">
+          <text class="info-label">处理方案：</text>
+          <text class="info-value multi-line">{{report.solutionPlan}}</text>
+        </view>
+      </view>
+      
+      <!-- 巡检图片 -->
+      <view class="report-section" wx:if="{{report.imageUrls && report.imageUrls.length > 0}}">
+        <view class="section-title">巡检图片（{{report.imageUrls.length}}张）</view>
+        <view class="image-list">
+          <view 
+            wx:for="{{report.imageUrls}}" 
+            wx:key="index"
+            class="image-item"
+            data-src="{{item}}"
+            bindtap="viewImage"
+            hover-class="image-item-hover"
+          >
+            <image src="{{item}}" mode="aspectFill" class="preview-image"></image>
+            <view class="image-count">{{index + 1}}/{{report.imageUrls.length}}</view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 操作按钮 -->
+      <view class="action-buttons">
+        <button 
+          class="action-btn" 
+          type="primary"
+          bindtap="downloadReport"
+          wx:if="{{report.reportUrl}}"
+          hover-class="btn-hover"
+          disabled="{{loading}}"
+        >
+          下载报告
+        </button>
+        <button 
+          class="action-btn" 
+          type="default"
+          bindtap="viewMap"
+          wx:if="{{report.landBoundary}}"
+          hover-class="btn-hover"
+          disabled="{{loading}}"
+        >
+          查看地块地图
+        </button>
+        <button 
+          class="action-btn" 
+          type="default"
+          bindtap="evaluateFlyer"
+          wx:if="{{report.flyerId && report.status === 2}}"
+          hover-class="btn-hover"
+          disabled="{{loading}}"
+        >
+          评价飞手
+        </button>
+        <!-- 刷新按钮 -->
+        <button 
+          class="action-btn" 
+          type="default"
+          bindtap="refreshPage"
+          loading="{{loading}}"
+          disabled="{{loading}}"
+          hover-class="btn-hover"
+        >
+          {{loading ? '刷新中...' : '刷新数据'}}
+        </button>
+      </view>
+    </view>
+    
+    <!-- 无报告提示 -->
+    <view class="no-report" wx:else>
+      <image src="/assets/images/no-data.png" mode="aspectFit"></image>
+      <text class="no-report-title">暂无报告信息</text>
+      <text class="no-report-subtitle">请输入报告ID进行查询</text>
+    </view>
+    
+    <!-- 加载中提示 -->
+    <view class="loading-state" wx:if="{{loading && !report}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+  </scroll-view>
+</view>

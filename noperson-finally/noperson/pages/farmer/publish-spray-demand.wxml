@@ -1,0 +1,211 @@
+<!-- publish-spray-demand.wxml -->
+<view class="publish-demand-container">
+  <navigation-bar title="发布喷洒需求" back="true" color="black" background="#FFF"></navigation-bar>
+  
+  <scroll-view class="form-scroll" scroll-y enable-flex="true">
+    <view class="form-container">
+      <!-- 地块ID（可选） -->
+      <view class="input-group">
+        <view class="input-label">地块ID（可选）</view>
+        <input 
+          class="input" 
+          type="number" 
+          placeholder="如已有地块管理系统，请输入地块ID"
+          value="{{landId}}"
+          bindinput="onLandIdInput"
+          maxlength="20"
+        />
+      </view>
+      
+      <!-- 地块名称 -->
+      <view class="input-group">
+        <view class="input-label">地块名称 <text class="required">*</text></view>
+        <input 
+          class="input {{errors.landName ? 'input-error' : ''}} {{fieldFocus.landName ? 'input-focus' : ''}}"
+          type="text" 
+          placeholder="请输入地块名称"
+          value="{{landName}}"
+          bindinput="onLandNameInput"
+          bindfocus="onFieldFocus"
+          bindblur="onFieldBlur"
+          data-field="landName"
+          maxlength="100"
+        />
+        <view class="char-count">{{charCount.landName}}/100</view>
+        <view class="error-message" wx:if="{{errors.landName}}">{{errors.landName}}</view>
+      </view>
+      
+      <!-- 地块边界 -->
+      <view class="input-group">
+        <view class="input-label">地块边界 <text class="required">*</text></view>
+        <textarea 
+          class="textarea {{errors.landBoundary ? 'input-error' : ''}} {{fieldFocus.landBoundary ? 'input-focus' : ''}}"
+          placeholder="请输入地块边界"
+          value="{{landBoundary}}"
+          bindinput="onLandBoundaryInput"
+          bindfocus="onFieldFocus"
+          bindblur="onFieldBlur"
+          data-field="landBoundary"
+          auto-height
+        />
+        <button 
+          class="map-btn"
+          type="default"
+          bindtap="selectLandByMap"
+        >
+          使用地图选择地块
+        </button>
+        <view class="error-message" wx:if="{{errors.landBoundary}}">{{errors.landBoundary}}</view>
+      </view>
+      
+      <!-- 作物类型 -->
+      <view class="input-group">
+        <view class="input-label">作物类型 <text class="required">*</text></view>
+        <picker bindchange="onCropTypeChange" value="{{cropTypeIndex}}" range="{{cropTypes}}" bindfocus="onFieldFocus" bindblur="onFieldBlur" data-field="cropType">
+          <view class="picker {{errors.cropType ? 'input-error' : ''}} {{fieldFocus.cropType ? 'input-focus' : ''}}">
+            <text class="picker-text">{{cropType || '请选择作物类型'}}</text>
+            <view class="picker-arrow">
+              <image src="/assets/images/arrow-down.png" mode="aspectFit"></image>
+            </view>
+          </view>
+        </picker>
+        <view class="error-message" wx:if="{{errors.cropType}}">{{errors.cropType}}</view>
+      </view>
+      
+      <!-- 病虫害类型 -->
+      <view class="input-group">
+        <view class="input-label">病虫害类型 <text class="required">*</text></view>
+        <input 
+          class="input {{errors.pestType ? 'input-error' : ''}} {{fieldFocus.pestType ? 'input-focus' : ''}}"
+          type="text" 
+          placeholder="请输入病虫害类型"
+          value="{{pestType}}"
+          bindinput="onPestTypeInput"
+          bindfocus="onFieldFocus"
+          bindblur="onFieldBlur"
+          data-field="pestType"
+          maxlength="100"
+        />
+        <view class="char-count">{{pestType.length}}/100</view>
+        <view class="error-message" wx:if="{{errors.pestType}}">{{errors.pestType}}</view>
+      </view>
+      
+      <!-- 地块位置 -->
+      <view class="input-group">
+        <view class="input-label">地块位置 <text class="required">*</text></view>
+        <view class="address-input-wrapper">
+          <input 
+            class="input address-input {{errors.landLocation ? 'input-error' : ''}}"
+            value="{{landLocation}}" 
+            bindinput="onLandLocationInput"
+            placeholder="请输入或获取地址"
+          />
+          <button 
+            class="get-location-btn"
+            bindtap="getCurrentLocation"
+            type="primary"
+            size="mini"
+          >
+            获取位置
+          </button>
+        </view>
+        <view class="error-message" wx:if="{{errors.landLocation}}">{{errors.landLocation}}</view>
+      </view>
+      
+      <!-- 地块面积 -->
+      <view class="input-group">
+        <view class="input-label">地块面积（亩） <text class="required">*</text></view>
+        <input 
+          class="input {{errors.landArea ? 'input-error' : ''}} {{fieldFocus.landArea ? 'input-focus' : ''}}"
+          type="digit" 
+          placeholder="请输入地块面积"
+          value="{{landArea}}"
+          bindinput="onLandAreaInput"
+          bindfocus="onFieldFocus"
+          bindblur="onFieldBlur"
+          data-field="landArea"
+        />
+        <view class="error-message" wx:if="{{errors.landArea}}">{{errors.landArea}}</view>
+      </view>
+      
+      <!-- 期望时间 -->
+      <view class="input-group">
+        <view class="input-label">期望时间 <text class="required">*</text></view>
+        <picker mode="datetime" bindchange="onDateTimeChange" value="{{expectedTime}}" start="{{today}}" end="{{maxDate}}" bindfocus="onFieldFocus" bindblur="onFieldBlur" data-field="expectedTime">
+          <view class="picker {{errors.expectedTime ? 'input-error' : ''}} {{fieldFocus.expectedTime ? 'input-focus' : ''}}">
+            <text class="picker-text">{{expectedTime || '请选择期望时间'}}</text>
+            <view class="picker-arrow">
+              <image src="/assets/images/arrow-down.png" mode="aspectFit"></image>
+            </view>
+          </view>
+        </picker>
+        <view class="error-message" wx:if="{{errors.expectedTime}}">{{errors.expectedTime}}</view>
+      </view>
+      
+      <!-- 预算金额 -->
+      <view class="input-group">
+        <view class="input-label">预算金额（元） <text class="required">*</text></view>
+        <input 
+          class="input {{errors.budget ? 'input-error' : ''}} {{fieldFocus.budget ? 'input-focus' : ''}}"
+          type="digit" 
+          placeholder="请输入预算金额"
+          value="{{budget}}"
+          bindinput="onBudgetInput"
+          bindfocus="onFieldFocus"
+          bindblur="onFieldBlur"
+          data-field="budget"
+        />
+        <button 
+          class="budget-calc-btn"
+          type="default"
+          bindtap="autoCalculateBudget"
+        >
+          自动估算
+        </button>
+        <view class="error-message" wx:if="{{errors.budget}}">{{errors.budget}}</view>
+      </view>
+      
+      <!-- 特殊要求 -->
+      <view class="input-group">
+        <view class="input-label">特殊要求（可选）</view>
+        <textarea 
+          class="textarea {{errors.specialRequirements ? 'input-error' : ''}} {{fieldFocus.specialRequirements ? 'input-focus' : ''}}"
+          placeholder="请输入特殊要求，如农药类型、作业禁忌等，描述越详细越容易找到合适的飞手"
+          value="{{specialRequirements}}"
+          bindinput="onSpecialRequirementsInput"
+          bindfocus="onFieldFocus"
+          bindblur="onFieldBlur"
+          data-field="specialRequirements"
+          maxlength="500"
+          auto-height
+        />
+        <view class="char-count">{{charCount.specialRequirements}}/500</view>
+        <view class="error-message" wx:if="{{errors.specialRequirements}}">{{errors.specialRequirements}}</view>
+      </view>
+      
+      <!-- 按钮组 -->
+      <view class="button-group">
+        <button 
+          class="reset-btn"
+          type="default"
+          bindtap="resetForm"
+          disabled="{{loading}}"
+        >
+          重置表单
+        </button>
+        
+        <!-- 提交按钮 -->
+        <button 
+          class="submit-btn {{landName && landBoundary && cropType && pestType && landLocation && landArea && expectedTime && budget ? 'submit-btn-active' : ''}}"
+          disabled="{{!landName || !landBoundary || !cropType || !pestType || !landLocation || !landArea || !expectedTime || !budget || loading}}"
+          bindtap="submitDemand"
+          loading="{{loading}}"
+        >
+          发布需求
+        </button>
+      </view>
+    </view>
+</scroll-view>
+
+
+</view>

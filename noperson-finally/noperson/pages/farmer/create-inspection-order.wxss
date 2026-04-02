@@ -1,0 +1,290 @@
+/* create-inspection-order.wxss */
+page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+}
+
+.create-order-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-scroll {
+  height: 80vh;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.form-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20rpx;
+}
+
+.form-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin: 40rpx 0;
+  text-align: center;
+}
+
+.form-scroll {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+}
+
+.input-group {
+  margin-bottom: 36rpx;
+  position: relative;
+}
+
+.input-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.required {
+  color: #e64340;
+  margin-left: 8rpx;
+}
+
+.input {
+  width: 100%;
+  height: 88rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+  font-size: 30rpx;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 4rpx rgba(24, 144, 255, 0.1);
+}
+
+.input.input-error {
+  border-color: #e64340;
+  box-shadow: 0 0 0 4rpx rgba(230, 67, 64, 0.1);
+}
+
+.input.input-focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 4rpx rgba(24, 144, 255, 0.1);
+}
+
+.textarea {
+  width: 100%;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+  font-size: 30rpx;
+  color: #333;
+  min-height: 160rpx;
+  transition: all 0.3s ease;
+}
+
+.textarea:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 4rpx rgba(24, 144, 255, 0.1);
+}
+
+.textarea.input-error {
+  border-color: #e64340;
+  box-shadow: 0 0 0 4rpx rgba(230, 67, 64, 0.1);
+}
+
+.textarea.input-focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 4rpx rgba(24, 144, 255, 0.1);
+}
+
+.map-btn {
+  width: 100%;
+  height: 80rpx;
+  margin-top: 16rpx;
+  background-color: #f0f0f0;
+  color: #1890ff;
+  font-size: 28rpx;
+  line-height: 80rpx;
+  border-radius: 12rpx;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.map-btn:active {
+  background-color: #e0e0e0;
+}
+
+.picker {
+  width: 100%;
+  height: 88rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+
+.picker.input-error {
+  border-color: #e64340;
+  box-shadow: 0 0 0 4rpx rgba(230, 67, 64, 0.1);
+}
+
+.picker-text {
+  font-size: 30rpx;
+  color: #333;
+}
+
+.picker-arrow {
+  width: 20rpx;
+  height: 20rpx;
+}
+
+.picker-arrow image {
+  width: 20rpx;
+  height: 20rpx;
+}
+
+/* 地址输入器相关样式 */
+.address-input-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.address-input {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+  padding-right: 20rpx;
+}
+
+/* 获取位置按钮样式 */
+.get-location-btn {
+  min-width: 140rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 24rpx;
+  padding: 0 20rpx;
+  margin-left: 20rpx;
+}
+
+.char-count {
+  position: absolute;
+  right: 30rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24rpx;
+  color: #999;
+}
+
+.textarea-count {
+  position: absolute;
+  right: 30rpx;
+  bottom: 20rpx;
+  top: auto;
+  transform: none;
+}
+
+.error-message {
+  font-size: 24rpx;
+  color: #e64340;
+  margin-top: 8rpx;
+  margin-left: 4rpx;
+}
+
+.form-button-group {
+  margin-top: 60rpx;
+  display: flex;
+  gap: 24rpx;
+}
+
+.reset-btn {
+  flex: 1;
+  height: 96rpx;
+  line-height: 96rpx;
+  font-size: 32rpx;
+  color: #666;
+  background-color: #f5f5f5;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 48rpx;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.reset-btn:active {
+  background-color: #e0e0e0;
+}
+
+.submit-btn {
+  flex: 2;
+  height: 96rpx;
+  border-radius: 48rpx;
+  background-color: #ccc;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+  line-height: 96rpx;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.submit-btn-active {
+  background-color: #1aad19;
+  color: #fff;
+}
+
+.submit-btn:not([disabled]) {
+  background-color: #1aad19;
+}
+
+.submit-btn:not([disabled]):active {
+  opacity: 0.9;
+}
+
+.budget-calc-btn {
+  position: absolute;
+  right: 30rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60rpx;
+  line-height: 60rpx;
+  padding: 0 24rpx;
+  font-size: 24rpx;
+  background-color: #1890ff;
+  color: #fff;
+  border-radius: 30rpx;
+  min-width: auto;
+}
+
+.budget-calc-btn:active {
+  background-color: #096dd9;
+}
+
+/* 适配不同屏幕尺寸 */
+@media screen and (min-width: 768px) {
+  .form-scroll {
+    max-width: 800rpx;
+    margin: 0 auto;
+  }
+}

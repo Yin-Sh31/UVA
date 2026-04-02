@@ -1,0 +1,124 @@
+<!--pages/chat/chat.wxml-->
+<view class="chat-container">
+  <!-- 自定义导航栏 -->
+  <navigation-bar back="true" title="{{targetUserName}}" color="black" background="#FFF"></navigation-bar>
+  
+  <!-- 聊天内容区域 -->
+  <scroll-view 
+    class="chat-scroll"
+    scroll-y
+    scroll-into-view="{{scrollToMessage}}"
+    bindscrolltoupper="loadMoreMessages"
+    refresher-enabled
+    bindrefresherrefresh="onRefresh"
+    bindtap="hideEmojiPanel"
+  >
+    <!-- 加载更多提示 -->
+    <view class="load-more-tip" wx:if="{{loading && pageNum > 1}}">
+      <text>加载中...</text>
+    </view>
+    
+    <!-- 消息列表 -->
+    <view class="message-list">
+      <view 
+        wx:for="{{messages}}" 
+        wx:key="id"
+        id="msg-{{item.id}}"
+        class="message-item {{item.isSelf ? 'message-self' : 'message-other'}}"
+      >
+        <!-- 时间显示 -->
+        <view class="message-time-wrapper" wx:if="{{item.showTime}}">
+          <text class="message-time">{{item.formattedTime}}</text>
+        </view>
+        
+        <!-- 消息内容区域 -->
+        <view class="message-content-row">
+          <!-- 对方头像 -->
+          <image 
+            wx:if="{{!item.isSelf}}"
+            class="avatar" 
+            src="{{targetUserAvatar}}"
+            mode="aspectFill"
+          ></image>
+          
+          <view class="message-bubble-wrapper">
+            <!-- 消息气泡 -->
+            <view 
+              class="message-bubble {{item.status === 'failed' ? 'message-failed' : ''}} {{item.messageType === 'image' ? 'image-bubble' : ''}}"
+              bindtap="{{item.status === 'failed' ? 'resendMessage' : ''}}"
+              data-id="{{item.id}}"
+            >
+              <!-- 文本消息 -->
+              <block wx:if="{{item.messageType === 'text' || !item.messageType}}">
+                <text class="message-text">{{item.content}}</text>
+              </block>
+              
+              <!-- 图片消息 -->
+              <block wx:if="{{item.messageType === 'image'}}">
+                <image 
+                  class="message-image"
+                  src="{{item.content}}"
+                  mode="widthFix"
+                  lazy-load
+                  bindtap="previewImage"
+                  data-url="{{item.content}}"
+                ></image>
+              </block>
+              
+              <!-- 发送状态指示器 -->
+              <view class="message-status-indicator" wx:if="{{item.isSelf}}">
+                <view class="loading-spinner" wx:if="{{item.status === 'sending'}}">
+                  <text class="spinner-icon">⟳</text>
+                </view>
+                <view class="failed-icon" wx:if="{{item.status === 'failed'}}">
+                  <text>!</text>
+                </view>
+                <view class="sent-icon" wx:if="{{item.status === 'sent'}}">
+                  <text>✓</text>
+                </view>
+              </view>
+            </view>
+          </view>
+          
+          <!-- 自己头像 -->
+          <image 
+            wx:if="{{item.isSelf}}"
+            class="avatar" 
+            src="{{userInfo.avatar || '/assets/images/user-avatar.png'}}"
+            mode="aspectFill"
+          ></image>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 底部占位 -->
+    <view class="bottom-placeholder"></view>
+  </scroll-view>
+  
+  <!-- 输入区域 -->
+  <view class="input-area">
+    <view class="input-toolbar">
+      <!-- 输入框 -->
+      <view class="input-wrapper">
+        <textarea 
+          class="message-input"
+          placeholder="输入消息..."
+          value="{{inputMessage}}"
+          bindinput="onInputMessage"
+          maxlength="500"
+          auto-height
+          show-confirm-bar="{{false}}"
+        />
+      </view>
+      
+      <!-- 发送按钮 -->
+      <button 
+        class="send-btn {{hasContent ? 'active' : ''}}" 
+        bindtap="sendMessage"
+        disabled="{{!hasContent}}"
+      >
+        <text>发送</text>
+      </button>
+    </view>
+  </view>
+</view>

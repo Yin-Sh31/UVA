@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "会话详情",
+  "navigationStyle": "custom",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {
+    "message-item": "../../../components/message-item/message-item"
+  },
+  "enablePullDownRefresh": false
+}

@@ -1,0 +1,55 @@
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <navigation-bar title="我的" back="false" background="#ffffff"></navigation-bar>
+  
+  <!-- 内容容器 -->
+  <scroll-view class="content-container" scroll-y="true" enhanced="true" show-scrollbar="true">
+    <!-- 用户信息卡片 -->
+    <view class="user-card">
+      <view class="avatar-container">
+        <image class="avatar" src="{{userInfo.avatar || '/assets/images/user-avatar.png'}}" mode="aspectFill"></image>
+      </view>
+      <view class="user-info">
+        <text class="user-name">{{userInfo.realName || userInfo.userName || userInfo.username || '飞手用户'}}</text>
+        <view class="user-details">
+          <text class="audit-status">{{userInfo.certification || '未认证'}}</text>
+          <text class="skill-level">{{userInfo.skillLevel || '初级飞手'}}</text>
+        </view>
+        <view class="credit-info">
+          <view class="rating-container">
+            <text class="score-value">{{userInfo.formattedScore || '0.0'}}</text>
+            <view class="star-container">
+              <text class="star" wx:for="{{5}}" wx:key="index" wx:if="{{index < userInfo.starLevel}}">★</text>
+              <text class="star empty" wx:for="{{5}}" wx:key="index" wx:if="{{index >= userInfo.starLevel}}">★</text>
+            </view>
+          </view>
+          <view class="credit-stats">
+            <text class="stat-item">评价: {{userInfo.evaluationCount || 0}}条</text>
+            <text class="stat-item">好评率: {{userInfo.positiveRate || 0}}%</text>
+          </view>
+        </view>
+        <view class="balance-container">
+          <text class="balance-label">余额</text>
+          <text class="balance-amount">¥{{userInfo.balance || '0.00'}}</text>
+        </view>
+      </view>
+      <view class="edit-btn" bindtap="navigateToPage" data-id="my_info">
+        <text>编辑</text>
+      </view>
+    </view>
+  
+  <!-- 功能菜单 -->
+  <view class="menu-list">
+    <view class="menu-item" wx:for="{{menuItems}}" wx:key="id" bindtap="navigateToPage" data-id="{{item.id}}" data-url="{{item.url}}">
+      <image class="menu-icon" src="{{item.icon}}" mode="aspectFit"></image>
+      <text class="menu-name">{{item.name}}</text>
+      <text class="arrow-icon">→</text>
+    </view>
+  </view>
+  
+  <!-- 退出登录按钮 -->
+  <view class="logout-section">
+    <button class="logout-btn" type="warn" bindtap="logout">退出登录</button>
+  </view>
+  </scroll-view>
+</view>

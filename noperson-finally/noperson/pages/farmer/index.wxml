@@ -1,0 +1,240 @@
+<!-- farmer/index.wxml -->
+<view class="page-container">
+  <!-- 自定义导航栏 -->
+  <view class="custom-header">
+    <text class="header-title">农翼通 - 农户版</text>
+  </view>
+  
+  <!-- 内容区域 -->
+  <view class="content-container">
+    <!-- 轮播图区域 -->
+    <view class="banner-container">
+  <swiper 
+    indicator-dots="{{true}}" 
+    autoplay="{{true}}" 
+    interval="5000" 
+    duration="500"
+    circular="{{true}}"
+  >
+    <block wx:for="{{bannerImages}}" wx:key="id">
+      <swiper-item>
+        <view 
+          class="banner-item" 
+          data-index="{{index}}" 
+          bindtap="onBannerClick"
+        >
+          <image 
+            src="{{item.imageUrl}}" 
+            mode="aspectFill" 
+            class="banner-image"
+          />
+          <view class="banner-title">{{item.title}}</view>
+        </view>
+      </swiper-item>
+    </block>
+  </swiper>
+  
+  <!-- 加载状态显示 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-content">
+      <text>加载中...</text>
+    </view>
+  </view>
+</view>
+  
+  <!-- 顶部卡片：农业服务导航 -->
+  <view class="top-card">
+    <view class="card-title">农业服务导航</view>
+    <view class="card-subtitle">一站式农业服务平台</view>
+    <view class="card-buttons">
+      <button class="gradient-button inspection-button" bindtap="createInspectionDemand">
+        发布巡检需求
+      </button>
+      <button class="gradient-button spray-button" bindtap="createSprayDemand">
+        发布喷洒需求
+      </button>
+    </view>
+    <view class="card-buttons">
+      <button class="gradient-button disease-button" bindtap="showDiseaseDetectionDialog">
+        病虫害识别
+      </button>
+      <button class="gradient-button report-button" bindtap="viewInspectionReports">
+        巡检报告
+      </button>
+    </view>
+  </view>
+  
+  <!-- 页面内容更简洁，移除重复按钮 -->
+
+  <!-- 中部模块：我的需求进度 -->
+  <view class="demand-progress" wx:if="{{recentDemands.length > 0}}">
+    <view class="section-title">
+      <text>我的需求进度</text>
+      <text class="view-all" bindtap="viewAllDemands">查看全部</text>
+    </view>
+    <scroll-view scroll-x class="demand-list">
+      <view class="demand-card" wx:for="{{recentDemands}}" wx:key="id" bindtap="viewDemandDetail" data-id="{{item.id}}">
+        <view class="demand-type {{item.type === 'inspection' ? 'inspection' : 'spray'}}">{{item.typeDesc}}</view>
+        <view class="demand-location">{{item.location}}</view>
+        <view class="demand-status">{{item.status}}</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 飞手列表模块 -->
+  <view class="flyer-section">
+    <view class="section-title">
+      <text>附近飞手</text>
+      <text class="view-all" bindtap="viewAllFlyers">查看全部</text>
+    </view>
+    <view class="flyer-list">
+      <view wx:if="{{flyerList.length > 0}}">
+        <view class="flyer-card" wx:for="{{flyerList}}" wx:key="id" bindtap="viewFlyerDetail" data-flyer-id="{{item.id}}">
+          <view class="flyer-header">
+            <image class="flyer-avatar" src="{{item.avatar}}" mode="aspectFit"></image>
+            <view class="flyer-info">
+              <view class="flyer-name">
+                <text>{{item.username}}</text>
+                <text class="certification" wx:if="{{item.licenseType}}">{{item.licenseType}}</text>
+              </view>
+              <view class="flyer-meta">
+                <view class="rating">
+                  <text class="star">★</text>
+                  <text>{{item.rating}}</text>
+                </view>
+                <text class="credit-score">信用分: {{item.creditScore}}</text>
+                <text class="completed-orders">已完成: {{item.completedOrders}}单</text>
+                <text class="status {{item.isFree ? 'free' : 'busy'}}">{{item.isFree ? '空闲' : '忙碌'}}</text>
+              </view>
+              <view class="flyer-location">
+            <text>{{item.location}}</text>
+          </view>
+            </view>
+          </view>
+          <view class="flyer-specialty">
+            <text>擅长: {{item.skillLevel}}</text>
+            <text class="price">价格: {{item.pricePerAcre}}元/亩</text>
+          </view>
+          <button class="contact-flyer-btn">联系飞手</button>
+        </view>
+      </view>
+      <view class="empty-state" wx:else>
+        <image src="/assets/images/error-icon.png" mode="aspectFit" class="empty-icon"></image>
+        <text class="empty-text">暂无附近飞手</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 底部模块：快捷入口 -->
+  <view class="quick-entries">
+    <view class="entry-item" bindtap="contactCustomerService">
+      <view class="entry-icon">
+        <image src="/assets/images/user-info.png" mode="aspectFit"></image>
+      </view>
+      <text class="entry-text">联系客服</text>
+    </view>
+  </view>
+  
+  <!-- 自定义底部导航栏 -->
+  <view class="custom-tab-bar fixed-bottom">
+    <view class="tab-item active">
+      <text class="tab-icon">🏠</text>
+      <text>首页</text>
+    </view>
+    <view class="tab-item" bindtap="navigateToMyDemands">
+      <text class="tab-icon">📝</text>
+      <text>我的需求</text>
+    </view>
+    <view class="tab-item" bindtap="navigateToMessages">
+      <text class="tab-icon">💬</text>
+      <text>消息</text>
+    </view>
+    <view class="tab-item" bindtap="navigateToProfile">
+      <text class="tab-icon">👤</text>
+      <text>我的</text>
+    </view>
+  </view>
+
+  <!-- 病虫害识别对话框 -->
+  <view class="dialog-overlay" wx:if="{{diseaseDialogVisible}}" bindtap="hideDiseaseDetectionDialog">
+    <view class="dialog-container" catchtap="preventClose">
+      <view class="dialog-header">
+        <view class="dialog-nav">
+          <text class="dialog-back" bindtap="hideDiseaseDetectionDialog">← 返回</text>
+          <text class="dialog-title">AI识病</text>
+        </view>
+      </view>
+      <view class="dialog-content">
+        <!-- 图片上传区域 -->
+        <view class="upload-section">
+          <button class="upload-btn" bindtap="chooseImage" disabled="{{detecting}}">
+            拍照/相册上传
+          </button>
+          
+          <view class="image-preview" wx:if="{{selectedImage}}">
+            <image src="{{selectedImage}}" mode="aspectFit" class="preview-image"></image>
+          </view>
+          <view class="image-placeholder" wx:else>
+            <text class="placeholder-text">图片预览区</text>
+          </view>
+        </view>
+
+        <!-- 作物类型选择 -->
+        <view class="crop-type-section">
+          <text class="label-text">作物类型:</text>
+          <picker bindchange="onCropTypeChange" value="{{cropTypeIndex}}" range="{{cropTypes}}">
+            <view class="picker">
+              <text class="picker-text">{{cropTypes[cropTypeIndex]}}</text>
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+
+        <!-- 开始识别按钮 -->
+        <view class="button-section">
+          <button class="detect-btn" bindtap="startDetection" disabled="{{!selectedImage || detecting}}">
+            {{detecting ? 'AI正在分析图片...' : '开始识别'}}
+          </button>
+        </view>
+
+        <!-- 识别结果 -->
+        <view class="result-section" wx:if="{{detectionResult}}">
+          <view class="result-header">
+            <text class="result-title">— 识别结果 —</text>
+          </view>
+          <view class="result-content">
+            <view class="result-item">
+              <text class="result-label">病害:</text>
+              <text class="result-value">{{detectionResult.diseaseName || '未识别'}}</text>
+            </view>
+            <view class="result-item">
+              <text class="result-label">置信度:</text>
+              <text class="result-value">{{detectionResult.confidence || '未知'}}%</text>
+            </view>
+            <view class="result-item">
+              <text class="result-label">推荐药剂:</text>
+              <text class="result-value">{{detectionResult.recommendedPesticide || '暂无'}}</text>
+            </view>
+            <view class="result-item">
+              <text class="result-label">防治建议:</text>
+              <text class="result-value">{{detectionResult.controlMeasures || '暂无'}}</text>
+            </view>
+          </view>
+
+          <!-- 低置信度提示 -->
+          <view class="low-confidence-tip" wx:if="{{detectionResult.confidence && detectionResult.confidence < 70}}">
+            <text class="tip-text">识别不确定，建议重新拍照或咨询农技专家</text>
+          </view>
+
+          <!-- 立即找飞手打药按钮 -->
+          <view class="action-section">
+            <button class="flyer-btn" bindtap="navigateToPublishDemand">
+              立即找飞手打药
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  </view>
+</view>

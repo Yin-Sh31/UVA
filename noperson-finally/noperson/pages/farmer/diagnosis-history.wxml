@@ -1,0 +1,58 @@
+<page-meta>
+  <!-- 自定义导航栏 -->
+  <navigation-bar title="我的诊断" back="{{true}}" />
+</page-meta>
+
+<view class="container">
+  
+  <!-- 诊断历史列表 -->
+  <view class="history-list">
+    <view wx:for="{{historyList}}" wx:key="id" class="history-item">
+      <view class="history-header">
+        <view class="history-time">{{item.createTime}}</view>
+        <view class="crop-type">{{item.cropType}}</view>
+      </view>
+      
+      <view class="history-content">
+        <image class="diagnosis-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+        
+        <view class="diagnosis-info">
+          <view class="disease-info">
+            <text class="label">病害：</text>
+            <text class="disease-name">{{item.diseaseName}}</text>
+          </view>
+          
+          <view class="confidence-info">
+            <text class="label">置信度：</text>
+            <text class="confidence {{item.confidence < 70 ? 'low-confidence' : ''}}">{{item.confidence}}%</text>
+          </view>
+          
+          <view class="pesticide-info" wx:if="{{item.recommendedPesticide}}">
+            <text class="label">推荐农药：</text>
+            <text class="pesticide">{{item.recommendedPesticide}}</text>
+          </view>
+          
+          <view class="measures-info" wx:if="{{item.controlMeasures}}">
+            <text class="label">防治措施：</text>
+            <text class="measures">{{item.controlMeasures}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="history-footer">
+        <button class="spray-btn" bindtap="goToSpray" data-item="{{item}}">立即找飞手打药</button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 空状态 -->
+  <view wx:if="{{historyList.length === 0}}" class="empty-state">
+    <image class="empty-icon" src="/images/demand-icon.png" mode="aspectFit"></image>
+    <text class="empty-text">暂无诊断记录</text>
+  </view>
+  
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-state">
+    <text>加载中...</text>
+  </view>
+</view>

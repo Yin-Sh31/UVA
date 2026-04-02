@@ -1,0 +1,359 @@
+<!-- farmer/demand-detail.wxml -->
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <navigation-bar back="true" title="需求详情"></navigation-bar>
+  
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{loading && !demandDetail && !cachedDetail}}">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+  
+  <!-- 错误状态 -->
+  <view class="error-container" wx:if="{{error && !loading && !demandDetail && !cachedDetail}}">
+    <image class="error-icon" src="/assets/images/user-info.png"></image>
+    <text class="error-text">{{errorMsg || '加载失败'}}</text>
+    <button class="retry-btn" bindtap="refreshPage">重新加载</button>
+  </view>
+  
+  <!-- 需求详情内容 -->
+  <view class="detail-content" wx:if="{{!loading && (demandDetail || cachedDetail)}}">
+    <!-- 缓存数据提示 -->
+    <view class="cached-data-hint" wx:if="{{cachedDetail && !demandDetail}}">
+      <text class="hint-text">当前显示的是缓存数据，下拉可刷新最新内容</text>
+    </view>
+    <!-- 需求基本信息卡片 -->
+    <view class="info-card">
+      <view class="card-header">
+        <text class="card-title">需求信息</text>
+        <view class="status-badge {{(demandDetail && demandDetail.statusClass) || (cachedDetail && cachedDetail.statusClass) || ''}}">{{(demandDetail && demandDetail.status) || (cachedDetail && cachedDetail.status) || ''}}</view>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">需求编号：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.id) || (cachedDetail && cachedDetail.id) || ''}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">需求类型：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.type) || (cachedDetail && cachedDetail.type) || ''}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">创建时间：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.createTime) || (cachedDetail && cachedDetail.createTime) || ''}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">需求地点：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.fieldLocation) || (cachedDetail && cachedDetail.fieldLocation) || ''}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">需求面积：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.area) || (cachedDetail && cachedDetail.area) || 0}} 亩</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">预算金额：</text>
+        <text class="info-value amount">¥{{(demandDetail && demandDetail.budget) || (cachedDetail && cachedDetail.budget) || 0}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">期望时间：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.expectedTime) || (cachedDetail && cachedDetail.expectedTime) || '未设置'}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">作物类型：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.cropType) || (cachedDetail && cachedDetail.cropType) || '未填写'}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">病虫害类型：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.pestType) || (cachedDetail && cachedDetail.pestType) || '未填写'}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{(demandDetail && demandDetail.inspectionPurpose) || (cachedDetail && cachedDetail.inspectionPurpose)}}">
+        <text class="info-label">巡检目的：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.inspectionPurpose) || (cachedDetail && cachedDetail.inspectionPurpose) || ''}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{(demandDetail && demandDetail.expectedResolution) || (cachedDetail && cachedDetail.expectedResolution)}}">
+        <text class="info-label">期望解决：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.expectedResolution) || (cachedDetail && cachedDetail.expectedResolution) || ''}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">备注信息：</text>
+        <text class="info-value notes">{{(demandDetail && demandDetail.notes) || (cachedDetail && cachedDetail.notes) || ''}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{(demandDetail && demandDetail.acceptTime) || (cachedDetail && cachedDetail.acceptTime)}}">
+        <text class="info-label">接单时间：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.acceptTime) || (cachedDetail && cachedDetail.acceptTime) || ''}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{(demandDetail && demandDetail.completionTime) || (cachedDetail && cachedDetail.completionTime)}}">
+        <text class="info-label">完成时间：</text>
+        <text class="info-value">{{(demandDetail && demandDetail.completionTime) || (cachedDetail && cachedDetail.completionTime) || ''}}</text>
+      </view>
+      </view>
+    
+    <!-- 飞手信息卡片（如果已接单） -->
+      <view class="info-card" wx:if="{{(demandDetail && demandDetail.flyerInfo) || (cachedDetail && cachedDetail.flyerInfo)}}">
+        <view class="card-header">
+          <text class="card-title">飞手信息</text>
+        </view>
+        
+        <view class="flyer-info">
+          <image class="flyer-avatar" src="{{(demandDetail && demandDetail.flyerInfo && demandDetail.flyerInfo.avatar) || (cachedDetail && cachedDetail.flyerInfo && cachedDetail.flyerInfo.avatar) || ''}}"></image>
+          <view class="flyer-details">
+            <view class="flyer-name">{{(demandDetail && demandDetail.flyerInfo && demandDetail.flyerInfo.name) || (cachedDetail && cachedDetail.flyerInfo && cachedDetail.flyerInfo.name) || ''}}</view>
+            <view class="flyer-meta">
+              <text class="meta-item">信用分：{{(demandDetail && demandDetail.flyerInfo && demandDetail.flyerInfo.creditScore) || (cachedDetail && cachedDetail.flyerInfo && cachedDetail.flyerInfo.creditScore) || 0}}</text>
+              <text class="meta-item">等级：{{(demandDetail && demandDetail.flyerInfo && demandDetail.flyerInfo.skillLevel) || (cachedDetail && cachedDetail.flyerInfo && cachedDetail.flyerInfo.skillLevel) || ''}}</text>
+            </view>
+          </view>
+          <button class="contact-btn" bindtap="contactFlyer" wx:if="{{(demandDetail && demandDetail.flyerInfo && demandDetail.flyerInfo.phone) || (cachedDetail && cachedDetail.flyerInfo && cachedDetail.flyerInfo.phone)}}" hover-class="btn-hover">联系飞手</button>
+        </view>
+      </view>
+    
+    <!-- 设备信息卡片 -->
+    <!-- 由于接口文档中未提供设备信息，暂不显示此卡片 -->
+    <!-- <view class="info-card" wx:if="{{demandDetail.deviceInfo}}">
+      <view class="card-header">
+        <text class="card-title">设备信息</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">设备名称：</text>
+        <text class="info-value">{{demandDetail.deviceInfo.name}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">设备类型：</text>
+        <text class="info-value">{{demandDetail.deviceInfo.type}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">设备型号：</text>
+        <text class="info-value">{{demandDetail.deviceInfo.model}}</text>
+      </view>
+    </view> -->
+    
+    <!-- 支付状态卡片 -->
+      <view class="info-card">
+        <view class="card-header">
+          <text class="card-title">支付信息</text>
+        </view>
+        
+        <view class="info-item">
+          <text class="info-label">支付状态：</text>
+          <text class="info-value payment-status" wx:if="{{(demandDetail && demandDetail.paymentStatusValue === 1) || (cachedDetail && cachedDetail.paymentStatusValue === 1)}}">已支付</text>
+          <text class="info-value payment-status pending" wx:elif="{{(demandDetail && demandDetail.paymentStatusValue === 0) || (cachedDetail && cachedDetail.paymentStatusValue === 0)}}">待支付</text>
+          <text class="info-value payment-status refunded" wx:else>{{(demandDetail && demandDetail.paymentStatus) || (cachedDetail && cachedDetail.paymentStatus) || ''}}</text>
+        </view>
+        
+        <view class="info-item" wx:if="{{(demandDetail && demandDetail.paymentAmount || 0) > 0 || (cachedDetail && cachedDetail.paymentAmount || 0) > 0}}">
+          <text class="info-label">支付金额：</text>
+          <text class="info-value amount">¥{{(demandDetail && demandDetail.paymentAmount) || (cachedDetail && cachedDetail.paymentAmount) || 0}}</text>
+        </view>
+      </view>
+    
+    <!-- 报告信息卡片（如果有报告） -->
+      <view class="info-card" wx:if="{{(demandDetail && demandDetail.reportId) || (cachedDetail && cachedDetail.reportId)}}">
+        <view class="card-header">
+          <text class="card-title">巡检报告</text>
+          <button class="view-report-btn" bindtap="viewReport" hover-class="btn-hover">查看详情</button>
+        </view>
+        
+        <view class="report-preview" wx:if="{{(demandDetail && demandDetail.inspectionReport && demandDetail.inspectionReport.content) || (cachedDetail && cachedDetail.inspectionReport && cachedDetail.inspectionReport.content)}}">
+          <text class="report-content">{{(demandDetail && demandDetail.inspectionReport && demandDetail.inspectionReport.content) || (cachedDetail && cachedDetail.inspectionReport && cachedDetail.inspectionReport.content) || ''}}</text>
+        </view>
+        
+        <view class="image-preview" wx:if="{{(demandDetail && demandDetail.inspectionReport && demandDetail.inspectionReport.images && demandDetail.inspectionReport.images.length > 0) || (cachedDetail && cachedDetail.inspectionReport && cachedDetail.inspectionReport.images && cachedDetail.inspectionReport.images.length > 0)}}">
+          <text class="preview-title">报告图片：</text>
+          <scroll-view scroll-x>
+            <view class="image-list">
+              <image wx:for="{{(demandDetail && demandDetail.inspectionReport && demandDetail.inspectionReport.images) || (cachedDetail && cachedDetail.inspectionReport && cachedDetail.inspectionReport.images) || []}}" wx:key="index" class="report-image" src="{{item}}" mode="aspectFill"></image>
+            </view>
+          </scroll-view>
+        </view>
+      </view>
+    
+    <!-- 底部操作按钮 -->
+      <view class="bottom-actions">
+        <!-- 待接单状态下显示取消按钮 -->
+        <button class="cancel-btn" bindtap="cancelDemand" wx:if="{{((demandDetail && demandDetail.status === '待接单') || (cachedDetail && cachedDetail.status === '待接单')) && !(cachedDetail && !demandDetail)}}" hover-class="btn-hover">取消需求</button>
+        
+        <!-- 待支付状态下显示支付按钮 -->
+        <button class="pay-btn" bindtap="payDemand" wx:if="{{(((demandDetail && demandDetail.paymentStatusValue === 0) || (cachedDetail && cachedDetail.paymentStatusValue === 0)) && ((demandDetail && demandDetail.status === '待接单') || (cachedDetail && cachedDetail.status === '待接单'))) && !(cachedDetail && !demandDetail)}}" hover-class="btn-hover">立即支付</button>
+        
+        <!-- 已完成状态下显示评价按钮（未评价）或反馈按钮（已评价） -->
+        <button class="evaluation-btn" bindtap="showEvaluation" wx:if="{{((demandDetail && demandDetail.status === '已完成') || (cachedDetail && cachedDetail.status === '已完成')) && !hasEvaluated && !(cachedDetail && !demandDetail)}}" hover-class="btn-hover">评价飞手</button>
+        <button class="feedback-btn" bindtap="feedbackDemand" wx:if="{{((demandDetail && demandDetail.status === '已完成') || (cachedDetail && cachedDetail.status === '已完成')) && hasEvaluated && !(cachedDetail && !demandDetail)}}" hover-class="btn-hover">反馈需求</button>
+      </view>
+  </view>
+  
+  <!-- 暂无数据状态 -->
+  <view class="empty-state" wx:if="{{!loading && !error && !demandDetail && !cachedDetail}}">
+    <image class="empty-icon" src="/assets/images/error-icon.png"></image>
+    <text class="empty-text">暂无需求数据</text>
+    <button class="back-btn" bindtap="onBackPress" hover-class="btn-hover">返回列表</button>
+  </view>
+  
+  <!-- 反馈表单弹窗 -->
+  <view class="feedback-modal" wx:if="{{showFeedbackForm}}">
+    <view class="modal-overlay" bindtap="closeFeedbackForm"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">反馈需求</text>
+        <text class="modal-close" bindtap="closeFeedbackForm">×</text>
+      </view>
+      
+      <view class="modal-body">
+        <!-- 文字输入 -->
+        <view class="form-item">
+          <text class="form-label">反馈内容：</text>
+          <textarea 
+            class="feedback-textarea" 
+            placeholder="请详细描述您的反馈内容..." 
+            value="{{feedbackContent}}"
+            bindinput="inputFeedbackContent"
+            maxlength="500"
+          ></textarea>
+          <text class="char-count">{{feedbackContent.length}}/500</text>
+        </view>
+        
+        <!-- 图片上传 -->
+        <view class="form-item">
+          <text class="form-label">上传图片：</text>
+          <view class="image-upload">
+            <view class="image-list">
+              <view 
+                wx:for="{{feedbackImages}}" 
+                wx:key="index" 
+                class="image-item"
+              >
+                <image 
+                  class="uploaded-image" 
+                  src="{{item}}" 
+                  mode="aspectFill"
+                  bindtap="previewImage"
+                  data-url="{{item}}"
+                ></image>
+                <text class="delete-image" bindtap="deleteImage" data-index="{{index}}">×</text>
+              </view>
+              <view 
+                class="add-image" 
+                bindtap="chooseImage"
+                wx:if="{{feedbackImages.length < maxImages}}"
+              >
+                <text class="add-icon">+</text>
+                <text class="add-text">添加图片</text>
+              </view>
+            </view>
+            <text class="image-tip">最多上传{{maxImages}}张图片</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="cancel-btn" bindtap="closeFeedbackForm" hover-class="btn-hover">取消</button>
+        <button class="submit-btn" bindtap="submitFeedback" hover-class="btn-hover">提交</button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 评价表单弹窗 -->
+  <view class="evaluation-modal" wx:if="{{showEvaluationForm}}">
+    <view class="modal-overlay" bindtap="closeEvaluationForm"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">评价飞手</text>
+        <text class="modal-close" bindtap="closeEvaluationForm">×</text>
+      </view>
+      
+      <view class="modal-body">
+        <!-- 作业质量评分 -->
+        <view class="form-item">
+          <text class="form-label">作业质量：</text>
+          <view class="star-rating">
+            <text 
+              wx:for="{{5}}" 
+              wx:key="index" 
+              class="star {{index < evaluation.scoreQuality ? 'active' : ''}}"
+              bindtap="selectScore"
+              data-type="scoreQuality"
+              data-score="{{index + 1}}"
+            >★</text>
+          </view>
+        </view>
+        
+        <!-- 准时性评分 -->
+        <view class="form-item">
+          <text class="form-label">准时性：</text>
+          <view class="star-rating">
+            <text 
+              wx:for="{{5}}" 
+              wx:key="index" 
+              class="star {{index < evaluation.scorePunctuality ? 'active' : ''}}"
+              bindtap="selectScore"
+              data-type="scorePunctuality"
+              data-score="{{index + 1}}"
+            >★</text>
+          </view>
+        </view>
+        
+        <!-- 服务态度评分 -->
+        <view class="form-item">
+          <text class="form-label">服务态度：</text>
+          <view class="star-rating">
+            <text 
+              wx:for="{{5}}" 
+              wx:key="index" 
+              class="star {{index < evaluation.scoreAttitude ? 'active' : ''}}"
+              bindtap="selectScore"
+              data-type="scoreAttitude"
+              data-score="{{index + 1}}"
+            >★</text>
+          </view>
+        </view>
+        
+        <!-- 作业效率评分 -->
+        <view class="form-item">
+          <text class="form-label">作业效率：</text>
+          <view class="star-rating">
+            <text 
+              wx:for="{{5}}" 
+              wx:key="index" 
+              class="star {{index < evaluation.scoreEfficiency ? 'active' : ''}}"
+              bindtap="selectScore"
+              data-type="scoreEfficiency"
+              data-score="{{index + 1}}"
+            >★</text>
+          </view>
+        </view>
+        
+        <!-- 评价内容 -->
+        <view class="form-item">
+          <text class="form-label">评价内容：</text>
+          <textarea 
+            class="evaluation-textarea" 
+            placeholder="请输入您的评价内容（选填）" 
+            value="{{evaluation.comment}}"
+            bindinput="inputComment"
+            maxlength="500"
+          ></textarea>
+          <text class="char-count">{{evaluation.comment.length}}/500</text>
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="cancel-btn" bindtap="closeEvaluationForm" hover-class="btn-hover">取消</button>
+        <button class="submit-btn" bindtap="submitEvaluation" hover-class="btn-hover">提交评价</button>
+      </view>
+    </view>
+  </view>
+</view>

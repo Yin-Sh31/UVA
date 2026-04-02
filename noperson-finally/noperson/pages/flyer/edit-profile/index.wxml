@@ -1,0 +1,198 @@
+<!-- 自定义导航栏 -->
+<navigation-bar title="用户信息" back="true" background="#ffffff"></navigation-bar>
+
+<!-- 内容容器 -->
+<view class="page-container" wx:if="{{!isLoading}}">
+  <!-- 滚动内容 -->
+  <scroll-view class="content-container" scroll-y enable-flex>
+    <!-- 头像区域 -->
+    <view class="avatar-section">
+      <view class="avatar-wrapper" bindtap="chooseAvatar" wx:if="{{editable}}">
+        <image 
+          class="user-avatar" 
+          src="{{formData.avatar || '/assets/images/user-avatar.png'}}"
+          mode="aspectFill"
+        ></image>
+        <view class="avatar-upload-mask">
+          <text class="avatar-upload-text">更换头像</text>
+        </view>
+      </view>
+      <view class="avatar-wrapper" wx:else>
+        <image 
+          class="user-avatar" 
+          src="{{userInfo.avatar || '/assets/images/user-avatar.png'}}"
+          mode="aspectFill"
+        ></image>
+      </view>
+    </view>
+
+    <!-- 信息表单 -->
+    <view class="form-section">
+      <!-- 用户名 -->
+      <view class="form-item">
+        <view class="form-label">用户名</view>
+        <view class="form-content">
+          <text class="form-text">{{userInfo.userName || '未设置'}}</text>
+        </view>
+      </view>
+
+      <!-- 手机号码 -->
+      <view class="form-item">
+        <view class="form-label">手机号码</view>
+        <view class="form-content">
+          <input 
+            wx:if="{{editable}}"
+            class="form-input" 
+            type="number" 
+            value="{{formData.phone}}" 
+            bindinput="onInputChange" 
+            data-field="phone" 
+            placeholder="请输入手机号码"
+          />
+          <text wx:else class="form-text">{{userInfo.phone || '未设置'}}</text>
+        </view>
+      </view>
+
+      <!-- 技能等级 -->
+      <view class="form-item">
+        <view class="form-label">技能等级</view>
+        <view class="form-content">
+          <picker wx:if="{{editable}}" bindchange="onPickerChange" value="{{['喷洒认证', '巡检认证', '全能认证'].indexOf(formData.skillLevel)}}" data-field="skillLevel" range="['喷洒认证', '巡检认证', '全能认证']">
+            <view class="picker form-input">
+              {{formData.skillLevel || '请选择技能等级'}}
+            </view>
+          </picker>
+          <text wx:else class="form-text">{{userInfo.skillLevel || '未设置'}}</text>
+        </view>
+      </view>
+
+      <!-- 认证状态 -->
+      <view class="form-item">
+        <view class="form-label">认证状态</view>
+        <view class="form-content">
+          <text class="form-text">{{userInfo.certification || '未认证'}}</text>
+        </view>
+      </view>
+
+      <!-- 位置 -->
+      <view class="form-item">
+        <view class="form-label">位置</view>
+        <view class="form-content location-content">
+          <input 
+            wx:if="{{editable}}"
+            class="form-input location-input" 
+            value="{{formData.location}}" 
+            bindinput="onInputChange" 
+            data-field="location" 
+            placeholder="请输入位置，如：湖北"
+          />
+          <button 
+            wx:if="{{editable}}"
+            class="get-location-btn"
+            bindtap="getCurrentLocation"
+            type="primary"
+            size="mini"
+          >
+            获取位置
+          </button>
+          <text wx:else class="form-text">{{userInfo.location || '未设置'}}</text>
+        </view>
+      </view>
+
+      <!-- 每亩价格 -->
+      <view class="form-item">
+        <view class="form-label">每亩价格</view>
+        <view class="form-content">
+          <input 
+            wx:if="{{editable}}"
+            class="form-input" 
+            type="digit" 
+            value="{{formData.pricePerAcre}}" 
+            bindinput="onInputChange" 
+            data-field="pricePerAcre" 
+            placeholder="请输入每亩价格"
+          />
+          <text wx:else class="form-text">{{userInfo.pricePerAcre || 0}}元</text>
+        </view>
+      </view>
+
+      <!-- 空闲状态 -->
+      <view class="form-item">
+        <view class="form-label">空闲状态</view>
+        <view class="form-content">
+          <picker wx:if="{{editable}}" bindchange="onPickerChange" value="{{formData.isFree}}" data-field="isFree" range="['忙碌', '空闲']">
+            <view class="picker form-input">
+              {{formData.isFree === 0 ? '忙碌' : '空闲'}}
+            </view>
+          </picker>
+          <text wx:else class="form-text">{{userInfo.isFree === 0 ? '忙碌' : '空闲'}}</text>
+        </view>
+      </view>
+
+      <!-- 个人简介 -->
+      <view class="form-item">
+        <view class="form-label">个人简介</view>
+        <view class="form-content">
+          <textarea 
+            wx:if="{{editable}}"
+            class="form-textarea" 
+            value="{{formData.introduction}}" 
+            bindinput="onInputChange" 
+            data-field="introduction" 
+            placeholder="请输入个人简介"
+            auto-height
+            maxlength="200"
+          />
+          <text wx:else class="form-text">{{userInfo.introduction || '未设置'}}</text>
+        </view>
+      </view>
+
+      <!-- 执照信息 -->
+      <view class="form-item">
+        <view class="form-label">执照编号</view>
+        <view class="form-content">
+          <text class="form-text">{{userInfo.licenseNo || '未设置'}}</text>
+        </view>
+      </view>
+
+      <view class="form-item">
+        <view class="form-label">执照类型</view>
+        <view class="form-content">
+          <text class="form-text">{{userInfo.licenseType || '未设置'}}</text>
+        </view>
+      </view>
+
+      <!-- 保险信息 -->
+      <view class="form-item">
+        <view class="form-label">保险编号</view>
+        <view class="form-content">
+          <text class="form-text">{{userInfo.insuranceNo || '未设置'}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 底部间距，确保内容不被按钮遮挡 -->
+    <view class="bottom-spacer"></view>
+    
+    <!-- 调试信息 -->
+    <view class="debug-info" style="display: none;">
+      <text>当前editable状态: {{editable}}</text>
+    </view>
+  </scroll-view>
+  
+  <!-- 按钮区域 - 固定在底部 -->
+  <view class="button-section fixed-bottom">
+    <button wx:if="{{editable}}" class="cancel-btn" bindtap="toggleEdit">取消</button>
+    <button wx:if="{{editable}}" class="save-btn" type="primary" bindtap="saveUserInfo" loading="{{isLoading}}">保存</button>
+    <button wx:else class="edit-btn" type="primary" bindtap="toggleEdit">编辑资料</button>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-container" wx:else>
+  <view class="loading-content">
+    <image class="loading-image" src="/assets/images/loading.gif"></image>
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>
+

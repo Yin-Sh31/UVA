@@ -1,0 +1,64 @@
+<!-- 飞手当前租借设备页面 -->
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <navigation-bar title="当前租借" back="true" background="#ffffff"></navigation-bar>
+  
+  <!-- 内容容器 -->
+  <scroll-view 
+    class="content-container"
+    scroll-y
+    refresher-enabled="true"
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onRefresh"
+  >
+    <!-- 加载中状态 -->
+    <view class="loading-state" wx:if="{{loading && currentRentals.length === 0}}">
+      <view class="loading-spinner"></view>
+      <text>加载中...</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{currentRentals.length === 0 && !loading}}">
+      <image src="/assets/images/no-message.svg" mode="aspectFit"></image>
+      <text>暂无租借设备</text>
+    </view>
+    
+    <!-- 当前租借设备列表 -->
+    <view class="device-list" wx:else>
+      <view 
+        class="device-item" 
+        wx:for="{{currentRentals}}" 
+        wx:key="id"
+      >
+        <view class="device-image-container">
+          <image 
+            class="device-image" 
+            src="{{item.picture || '/assets/images/user-info.png'}}" 
+            mode="aspectFill"
+            bindtap="viewDeviceDetail"
+            data-id="{{item.id}}"
+          ></image>
+        </view>
+        
+        <view class="device-info">
+          <text class="device-name" bindtap="viewDeviceDetail" data-id="{{item.id}}">{{item.name}}</text>
+          <text class="device-type">{{item.type}}</text>
+          <view class="rental-info">
+            <text class="rental-label">租借时间：</text>
+            <text class="rental-time">{{item.rentalTime}}</text>
+          </view>
+        </view>
+        
+        <view class="action-buttons">
+          <button 
+            class="release-btn" 
+            bindtap="releaseDevice" 
+            data-id="{{item.id}}"
+          >
+            释放设备
+          </button>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

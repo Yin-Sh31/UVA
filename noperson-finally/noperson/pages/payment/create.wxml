@@ -1,0 +1,62 @@
+<!-- payment/create.wxml -->
+<view class="payment-container">
+  <navigation-bar title="订单支付" back="true" color="black" background="#FFF"></navigation-bar>
+  
+  <!-- 支付金额 -->
+  <view class="amount-section">
+    <text class="amount-label">支付金额</text>
+    <text class="amount-value">¥{{amount.toFixed(2)}}</text>
+  </view>
+  
+  <!-- 订单信息 -->
+  <view class="order-info">
+    <view class="order-item">
+      <text class="order-label">订单类型</text>
+      <text class="order-value">{{orderTitle}}</text>
+    </view>
+    <view class="order-item">
+      <text class="order-label">订单编号</text>
+      <text class="order-value">{{orderId}}</text>
+    </view>
+  </view>
+  
+  <!-- 支付方式 -->
+  <view class="payment-methods">
+    <text class="section-title">选择支付方式</text>
+    
+    <block wx:for="{{paymentMethods}}" wx:key="id">
+      <view 
+        class="payment-method {{selectedMethod === item.id ? 'payment-method-active' : ''}}"
+        bindtap="selectPaymentMethod"
+        data-id="{{item.id}}"
+      >
+        <image class="payment-icon" src="{{item.icon}}" mode="aspectFit"></image>
+        <text class="payment-name">{{item.name}}</text>
+        <view class="method-selected" wx:if="{{selectedMethod === item.id}}">
+          <image src="/assets/images/selected-icon.png" mode="aspectFit"></image>
+        </view>
+      </view>
+    </block>
+  </view>
+  
+  <!-- 支付按钮 -->
+  <view class="action-buttons">
+    <button 
+      class="pay-btn"
+      type="primary"
+      disabled="{{loading}}"
+      bindtap="createPayment"
+      loading="{{loading}}"
+    >
+      确认支付
+    </button>
+    <button 
+      class="cancel-btn"
+      type="default"
+      disabled="{{loading}}"
+      bindtap="cancelPayment"
+    >
+      取消
+    </button>
+  </view>
+</view>

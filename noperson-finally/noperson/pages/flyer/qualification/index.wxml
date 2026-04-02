@@ -1,0 +1,130 @@
+<!-- flyer/qualification/index.wxml -->
+<view class="qualification-container">
+  <!-- 固定的导航栏 -->
+  <navigation-bar title="资质管理" back="true" color="black" background="#FFF"></navigation-bar>
+  
+  <!-- 固定的状态区域 -->
+  <view class="status-section">
+    <view class="status-info">
+      <text class="status-title">当前状态：</text>
+      <text class="status-value status-{{qualificationStatus}}">{{statusText}}</text>
+    </view>
+    
+    <!-- 审核备注 -->
+    <view class="audit-remark" wx:if="{{qualificationStatus === 3 && auditRemark}}">
+      <text class="remark-label">审核意见：</text>
+      <text class="remark-content">{{auditRemark}}</text>
+    </view>
+  </view>
+  
+  <!-- 可滚动的内容区域 -->
+  <view class="content-scroll">
+    <!-- 资质上传表单 -->
+    <view class="qualification-form" wx:if="{{qualificationStatus !== 1 && qualificationStatus !== 2}}">
+      <!-- 执照类型 -->
+      <view class="form-group">
+        <text class="form-label">执照类型 <text class="required">*</text></text>
+        <input 
+          class="form-input" 
+          placeholder="请输入执照类型" 
+          value="{{licenseType}}"
+          bindinput="onLicenseTypeInput"
+        />
+      </view>
+      
+      <!-- 执照编号 -->
+      <view class="form-group">
+        <text class="form-label">执照编号 <text class="required">*</text></text>
+        <input 
+          class="form-input" 
+          placeholder="请输入执照编号" 
+          value="{{licenseNo}}"
+          bindinput="onLicenseNoInput"
+        />
+      </view>
+      
+      <!-- 执照上传 -->
+      <view class="form-group">
+        <text class="form-label">飞手执照 <text class="required">*</text></text>
+        <view 
+          class="upload-area"
+          bindtap="chooseLicenseImage"
+          wx:if="{{!uploadStatus.license && (!qualificationInfo || !qualificationInfo.licenseUrl)}}"
+        >
+          <image src="/assets/images/upload-icon.png" mode="aspectFit"></image>
+          <text>点击上传飞手执照</text>
+          <text class="upload-tip">支持JPG、PNG、PDF格式，文件不超过5MB</text>
+        </view>
+        
+        <view 
+          class="uploaded-file"
+          wx:elif="{{uploadStatus.license || (qualificationInfo && qualificationInfo.licenseUrl)}}"
+          bindtap="previewImage"
+          data-type="license"
+        >
+          <image class="file-icon" src="/assets/images/file-icon.png" mode="aspectFit"></image>
+          <text class="file-name">{{licenseFileName || '飞手执照'}}</text>
+          <image class="preview-icon" src="/assets/images/preview-icon.png" mode="aspectFit"></image>
+        </view>
+      </view>
+      
+      <!-- 上传按钮 -->
+      <view class="submit-section">
+        <button 
+          class="submit-btn"
+          type="primary"
+          bindtap="uploadQualification"
+          disabled="{{!uploadStatus.license}}">
+          {{qualificationStatus === 0 ? '提交资质' : '重新提交'}}
+        </button>
+        <text class="submit-tip">提交后将进入审核流程，审核通过后方可接单</text>
+      </view>
+    </view>
+    
+    <!-- 审核中提示 -->
+    <view class="auditing-section" wx:if="{{qualificationStatus === 0}}">
+      <image src="/assets/images/auditing-icon.png" mode="aspectFit"></image>
+      <text class="auditing-text">您的资质正在审核中</text>
+      <text class="auditing-subtext">审核结果将通过消息通知您，请耐心等待</text>
+    </view>
+    
+    <!-- 已通过提示 -->
+    <view class="approved-section" wx:if="{{qualificationStatus === 1}}">
+      <image src="/assets/images/approved-icon.png" mode="aspectFit"></image>
+      <text class="approved-text">您的资质已通过审核</text>
+      <text class="approved-subtext">您可以开始接单了</text>
+      
+      <!-- 已通过资质信息 -->
+      <view class="approved-info" wx:if="{{licenseType || licenseNo}}">
+        <view class="info-item">
+          <text class="info-label">执照类型：</text>
+          <text class="info-value">{{licenseType}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">执照编号：</text>
+          <text class="info-value">{{licenseNo}}</text>
+        </view>
+        <!-- 执照文件预览 -->
+        <view class="info-item" wx:if="{{licenseFileUrl}}">
+          <text class="info-label">执照文件：</text>
+          <image 
+            class="license-image" 
+            src="{{licenseFileUrl}}" 
+            mode="aspectFit"
+            bindtap="previewImage"
+          />
+        </view>
+      </view>
+      
+      <!-- 重新上传按钮 -->
+      <view class="reupload-section">
+        <button 
+          class="reupload-btn"
+          bindtap="reuploadQualification"
+        >
+          重新上传资质
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

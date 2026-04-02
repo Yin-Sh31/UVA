@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "飞手列表",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "navigation-bar": "../../components/navigation-bar/navigation-bar"
+  }
+}

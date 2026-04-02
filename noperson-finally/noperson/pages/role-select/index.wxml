@@ -1,0 +1,48 @@
+<!-- index.wxml -->
+<view class="role-select-container">
+  <navigation-bar title="选择角色" back="false" color="black" background="#FFF"></navigation-bar>
+  
+  <view class="header">
+    <text class="welcome-text">欢迎使用{{appName}}</text>
+    <text class="sub-text">请选择您的角色进入对应功能</text>
+  </view>
+  
+  <view class="role-list">
+    <view 
+      wx:for="{{roles}}" 
+      wx:key="id"
+      class="role-item {{selectedRole === item.id ? 'role-item-selected' : ''}}"
+      data-roleid="{{item.id}}"
+      bindtap="selectRole"
+    >
+      <view class="role-icon">
+        <image src="{{item.icon}}" mode="aspectFit"></image>
+      </view>
+      <view class="role-info">
+        <text class="role-name">{{item.name}}</text>
+        <text class="role-description">{{item.description}}</text>
+      </view>
+      <view class="role-check" wx:if="{{selectedRole === item.id}}">
+        <image src="/assets/images/check.png" mode="aspectFit"></image>
+      </view>
+    </view>
+  </view>
+  
+  <view class="footer">
+    <button 
+      class="enter-btn {{selectedRole ? 'enter-btn-active' : ''}}"
+      disabled="{{!selectedRole}}"
+      bindtap="enterRoleHome"
+    >
+      进入系统
+    </button>
+    
+    <button 
+      class="logout-btn"
+      type="warn"
+      bindtap="logout"
+    >
+      退出登录
+    </button>
+  </view>
+</view>

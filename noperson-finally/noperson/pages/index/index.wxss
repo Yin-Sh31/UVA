@@ -1,0 +1,372 @@
+/* 全局样式变量 */
+page {
+  background-color: #F5F5F5;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 通用标题样式 */
+.section-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333333;
+  margin: 20rpx 0;
+  display: block;
+}
+
+/* 农户首页样式 */
+.farmer-home {
+  padding: 0 30rpx 30rpx;
+}
+
+/* 顶部卡片样式 */
+.top-card {
+  height: 300rpx;
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  margin-top: 20rpx;
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.top-card-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.top-card-subtitle {
+  font-size: 28rpx;
+  color: #999999;
+  margin-top: 10rpx;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+
+.gradient-button {
+  flex: 1;
+  height: 90rpx;
+  font-size: 32rpx;
+  color: #ffffff;
+  border-radius: 45rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.gradient-button.inspection {
+  background: linear-gradient(to right, #4CAF50, #8BC34A);
+  margin-right: 20rpx;
+}
+
+.gradient-button.spray {
+  background: linear-gradient(to right, #8BC34A, #CDDC39);
+}
+
+/* 订单概览样式 */
+.orders-section {
+  margin-top: 30rpx;
+}
+
+.orders-list {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 10rpx;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+}
+
+.order-card {
+  width: 300rpx;
+  height: 200rpx;
+  background-color: #ffffff;
+  border-radius: 15rpx;
+  padding: 20rpx;
+  margin-right: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.05);
+}
+
+.order-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-type {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 10rpx;
+}
+
+.order-location {
+  font-size: 28rpx;
+  color: #666666;
+}
+
+.order-status {
+  font-size: 30rpx;
+  color: #4CAF50;
+  text-align: right;
+}
+
+/* 快捷入口样式 */
+.quick-access {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30rpx;
+}
+
+.access-item {
+  width: 200rpx;
+  height: 200rpx;
+  background-color: #ffffff;
+  border-radius: 15rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.05);
+}
+
+.access-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-bottom: 20rpx;
+}
+
+.access-icon.report {
+  background-color: #E3F2FD;
+}
+
+.access-icon.service {
+  background-color: #FFF3E0;
+}
+
+.access-name {
+  font-size: 30rpx;
+  color: #333333;
+}
+
+/* 农户推荐信息样式 */
+.farmers-section {
+  padding: 30rpx;
+}
+
+.farmers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.farmer-card {
+  background-color: #ffffff;
+  border-radius: 15rpx;
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.05);
+}
+
+.farmer-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+  background-color: #f0f0f0;
+}
+
+.farmer-info {
+  flex: 1;
+}
+
+.farmer-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.farmer-location {
+  font-size: 28rpx;
+  color: #666666;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.farmer-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.stat-item {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* 飞手首页样式 */
+.flyer-home {
+  padding-bottom: 30rpx;
+}
+
+/* 筛选栏样式 */
+.filter-bar {
+  background-color: #ffffff;
+  padding: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.filter-tabs {
+  display: flex;
+  flex: 1;
+}
+
+.filter-tab {
+  padding: 10rpx 30rpx;
+  font-size: 28rpx;
+  color: #666666;
+}
+
+.filter-tab.active {
+  color: #4CAF50;
+  border-bottom: 4rpx solid #4CAF50;
+}
+
+.distance-filter {
+  padding: 0 20rpx;
+}
+
+.distance-picker {
+  font-size: 28rpx;
+  color: #666666;
+}
+
+/* 需求列表样式 */
+.requests-section {
+  padding: 20rpx;
+}
+
+.request-card {
+  background-color: #ffffff;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.05);
+}
+
+.request-header {
+  display: flex;
+  margin-bottom: 20rpx;
+}
+
+.request-type {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+}
+
+.request-type.inspection {
+  background-color: #FFEBEE;
+  color: #F44336;
+}
+
+.request-type.spray {
+  background-color: #E3F2FD;
+  color: #2196F3;
+}
+
+.request-info {
+  margin-bottom: 20rpx;
+}
+
+.request-address,
+.request-time,
+.request-status {
+  font-size: 28rpx;
+  color: #666666;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.request-budget {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.request-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20rpx;
+}
+
+.detail-button {
+  border: 2rpx solid #CCCCCC;
+  color: #666666;
+  font-size: 28rpx;
+  margin-right: 20rpx;
+  width: 160rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+}
+
+.accept-button {
+  background-color: #4CAF50;
+  color: #ffffff;
+  font-size: 28rpx;
+  width: 160rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+}
+
+/* 底部提示条样式 */
+.bottom-tip {
+  background-color: #FFF3E0;
+  padding: 20rpx;
+  margin: 0 20rpx;
+  border-radius: 10rpx;
+}
+
+.tip-text {
+  font-size: 28rpx;
+  color: #FF9800;
+}
+
+
+
+/* 按钮统一样式 */
+button {
+  border-radius: 10rpx;
+  line-height: normal;
+}
+
+button:active {
+  opacity: 0.8;
+}
+
+/* 补充缺失的点号 */
+.device-card {
+  width: 240rpx;
+  background-color: #ffffff;
+  border-radius: 15rpx;
+  padding: 20rpx;
+  margin-right: 20rpx;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.05);
+}

@@ -1,0 +1,396 @@
+/* farmer/flyer-detail.wxss */
+page {
+  height: 100%;
+}
+
+.container {
+  height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 120rpx;
+  overflow-y: auto;
+}
+
+/* 固定导航栏 */
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  z-index: 1000;
+  border-bottom: 1rpx solid #eee;
+}
+
+/* 加载状态 */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400rpx;
+  color: #999;
+  font-size: 32rpx;
+  padding-top: 180rpx;
+}
+
+/* 错误状态 */
+.error-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 400rpx;
+  color: #ff4d4f;
+  font-size: 32rpx;
+  padding-top: 180rpx;
+}
+
+.retry-btn {
+  margin-top: 40rpx;
+  width: 300rpx;
+}
+
+/* 内容区域 */
+.content {
+  padding: 30rpx;
+  padding-top: 180rpx;
+}
+
+/* 基本信息 */
+.basic-info {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+  display: flex;
+  align-items: center;
+}
+
+.avatar-section {
+  position: relative;
+  margin-right: 40rpx;
+}
+
+.avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+}
+
+.status-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 10rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #fff;
+}
+
+.status-free {
+  background-color: #52c41a;
+}
+
+.status-busy {
+  background-color: #ff4d4f;
+}
+
+.info-section {
+  flex: 1;
+}
+
+.name-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-right: 20rpx;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.rating-value {
+  font-size: 28rpx;
+  color: #faad14;
+  font-weight: bold;
+}
+
+.star-container {
+  display: flex;
+  margin-top: 4rpx;
+}
+
+.star {
+  font-size: 24rpx;
+  color: #faad14;
+  margin-right: 2rpx;
+}
+
+.star.empty {
+  color: #ddd;
+}
+
+.meta-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.meta-item {
+  display: flex;
+}
+
+.meta-label {
+  font-size: 26rpx;
+  color: #666;
+  margin-right: 10rpx;
+}
+
+.meta-value {
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.meta-value.positive {
+  color: #52c41a;
+}
+
+.contact-info {
+  margin-top: 20rpx;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+}
+
+.contact-label {
+  font-size: 26rpx;
+  color: #666;
+  margin-right: 10rpx;
+}
+
+.contact-value {
+  font-size: 26rpx;
+  color: #333;
+}
+
+/* 资质信息 */
+.qualification-section {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+.qualification-item {
+  display: flex;
+  margin-bottom: 20rpx;
+}
+
+.qualification-label {
+  font-size: 28rpx;
+  color: #666;
+  width: 160rpx;
+}
+
+.qualification-value {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+}
+
+/* 技能信息 */
+.skill-section {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+}
+
+.skill-item {
+  display: flex;
+  margin-bottom: 20rpx;
+}
+
+.skill-label {
+  font-size: 28rpx;
+  color: #666;
+  width: 160rpx;
+}
+
+.skill-value {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+}
+
+/* 个人简介 */
+.intro-section {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+}
+
+.introduction {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 经验信息 */
+.experience-section {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+}
+
+.experience {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 底部操作按钮 */
+.bottom-actions {
+  display: flex;
+  padding: 30rpx;
+  background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: 1rpx solid #eee;
+}
+
+.contact-btn {
+  flex: 1;
+  margin-right: 20rpx;
+  height: 88rpx;
+  font-size: 32rpx;
+  border-radius: 44rpx;
+}
+
+.invite-btn {
+  flex: 1;
+  height: 88rpx;
+  font-size: 32rpx;
+  border-radius: 44rpx;
+}
+
+.invite-btn.disabled {
+  background-color: #d9d9d9;
+  color: #fff;
+}
+
+/* 评价列表 */
+.evaluation-section {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 120rpx;
+}
+
+.evaluations-loading {
+  text-align: center;
+  padding: 40rpx;
+  color: #999;
+  font-size: 28rpx;
+}
+
+.evaluations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx;
+}
+
+.evaluation-item {
+  padding: 30rpx;
+  background-color: #f9f9f9;
+  border-radius: 16rpx;
+  border-left: 4rpx solid #1890ff;
+}
+
+.evaluation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.evaluation-rating {
+  display: flex;
+  align-items: center;
+}
+
+.evaluation-score {
+  font-size: 26rpx;
+  color: #faad14;
+  font-weight: bold;
+  margin-left: 10rpx;
+}
+
+.evaluation-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.evaluation-details {
+  margin-bottom: 20rpx;
+}
+
+.evaluation-comment {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+.evaluation-scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.score-item {
+  display: flex;
+  align-items: center;
+}
+
+.score-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-right: 8rpx;
+}
+
+.score-value {
+  font-size: 24rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.empty-evaluations {
+  text-align: center;
+  padding: 40rpx;
+  color: #999;
+  font-size: 28rpx;
+}

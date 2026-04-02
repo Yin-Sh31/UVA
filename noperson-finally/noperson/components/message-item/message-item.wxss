@@ -1,0 +1,147 @@
+/* 消息项组件样式 */
+.message-item {
+  display: flex;
+  margin-bottom: 30rpx;
+  padding: 0 30rpx;
+}
+
+/* 对方消息：左对齐 */
+.message-item.other {
+  flex-direction: row;
+}
+
+/* 自己消息：右对齐 */
+.message-item.self {
+  flex-direction: row-reverse;
+}
+
+/* 头像 */
+.message-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 20rpx;
+}
+
+.message-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 消息内容包装 */
+.message-content-wrapper {
+  max-width: 60%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 发送者名称 */
+.message-sender {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+  padding-left: 10rpx;
+}
+
+/* 消息气泡 */
+.message-bubble {
+  padding: 20rpx 30rpx;
+  border-radius: 20rpx;
+  word-break: break-all;
+  position: relative;
+}
+
+/* 对方消息气泡 */
+.message-item.other .message-bubble {
+  background-color: #ffffff;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  border-bottom-left-radius: 6rpx;
+}
+
+/* 自己消息气泡 */
+.message-item.self .message-bubble {
+  background-color: #94e1ff;
+  box-shadow: 0 2rpx 8rpx rgba(148, 225, 255, 0.3);
+  border-bottom-right-radius: 6rpx;
+}
+
+/* 文本消息 */
+.message-text {
+  font-size: 28rpx;
+  line-height: 44rpx;
+  color: #333;
+  white-space: pre-wrap;
+}
+
+.message-item.self .message-text {
+  color: #333;
+}
+
+/* 图片消息容器 */
+.message-image-container {
+  position: relative;
+}
+
+/* 图片消息 */
+.message-image {
+  max-width: 300rpx;
+  max-height: 300rpx;
+  min-width: 100rpx;
+  min-height: 100rpx;
+  border-radius: 12rpx;
+}
+
+/* 图片气泡特殊样式 */
+.image-bubble {
+  padding: 10rpx;
+}
+
+/* 订单消息样式 */
+.order-message {
+  min-width: 300rpx;
+}
+
+.order-tag {
+  font-size: 24rpx;
+  color: #1989fa;
+  margin-bottom: 15rpx;
+  font-weight: 500;
+}
+
+.order-content {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 40rpx;
+  margin-bottom: 10rpx;
+}
+
+.message-item.self .order-content {
+  color: #333;
+}
+
+.order-id {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.message-item.self .order-id {
+  color: #666;
+}
+
+/* 消息时间 */
+.message-time {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 8rpx;
+  text-align: center;
+}
+
+/* 订单消息点击效果 */
+.order-message {
+  cursor: pointer;
+}
+
+.order-message:active {
+  opacity: 0.8;
+}

@@ -1,0 +1,170 @@
+/* 机主列表页面样式 */
+
+/* 页面容器 */
+.flyer-owners-page {
+  background-color: #f8f8f8;
+  min-height: 100vh;
+  padding-top: 150rpx; /* 增加顶部内边距使整体内容再向下移动 */
+  position: relative;
+}
+
+/* 返回主页按钮 */
+.back-home-btn {
+  position: fixed;
+  top: 60rpx;
+  left: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  width: 60rpx;
+  height: 60rpx;
+  z-index: 100;
+}
+
+.back-home-icon {
+  width: 24rpx;
+  height: 40rpx;
+  -webkit-mask: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='24' viewBox='0 0 12 24'%3E  %3Cpath fill-opacity='.9' fill-rule='evenodd' d='M10 19.438L8.955 20.5l-7.666-7.79a1.02 1.02 0 0 1 0-1.42L8.955 3.5 10 4.563 2.682 12 10 19.438z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  mask: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='24' viewBox='0 0 12 24'%3E  %3Cpath fill-opacity='.9' fill-rule='evenodd' d='M10 19.438L8.955 20.5l-7.666-7.79a1.02 1.02 0 0 1 0-1.42L8.955 3.5 10 4.563 2.682 12 10 19.438z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  background-color: #333333;
+}
+
+.back-home-text {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+/* 内容容器 */
+.content-container {
+  padding: 20rpx;
+}
+
+/* 搜索栏 */
+.search-bar {
+  margin-bottom: 20rpx;
+}
+
+.search-input {
+  width: 100%;
+  height: 80rpx;
+  background-color: #ffffff;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+}
+
+.search-icon {
+  font-size: 28rpx;
+  color: #999;
+  margin-right: 10rpx;
+}
+
+.search-input input {
+  flex: 1;
+  height: 100%;
+  font-size: 28rpx;
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+
+.search-bar input {
+  width: 100%;
+  height: 80rpx;
+  background-color: #ffffff;
+  border-radius: 40rpx;
+  padding: 0 40rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+/* 机主列表 */
+.owners-list {
+  background-color: #ffffff;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+/* 机主列表项 */
+.owner-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.owner-item:last-child {
+  border-bottom: none;
+}
+
+/* 头像 */
+.owner-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  overflow: hidden;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.owner-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 信息区域 */
+.owner-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.owner-name {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 4rpx;
+  display: block;
+}
+
+.owner-phone {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+}
+
+/* 箭头 */
+.arrow-icon {
+  color: #999;
+  font-size: 28rpx;
+  margin-left: 10rpx;
+  flex-shrink: 0;
+}
+
+/* 加载更多提示 */
+.load-more {
+  padding: 20rpx;
+  text-align: center;
+  color: #999;
+  font-size: 24rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  padding: 80rpx 0;
+  text-align: center;
+}
+
+.empty-text {
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 加载状态 */
+.loading-state {
+  padding: 40rpx 0;
+  text-align: center;
+}

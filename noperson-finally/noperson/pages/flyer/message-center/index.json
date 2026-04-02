@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "消息会话",
+  "navigationStyle": "custom",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {
+    "navigation-bar": "../../../components/navigation-bar/navigation-bar"
+  },
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#f5f5f5"
+}

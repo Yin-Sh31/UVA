@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录到注册测试</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #409EFF;
+    }
+    .test-section {
+      background: #f5f7fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #e4e7ed;
+    }
+    button {
+      background: #409EFF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    button:hover {
+      background: #66b1ff;
+    }
+    .clear-btn {
+      background: #909399;
+    }
+    .clear-btn:hover {
+      background: #a6a9ad;
+    }
+    .steps {
+      background: white;
+      padding: 15px;
+      border-radius: 4px;
+      border-left: 4px solid #409EFF;
+      margin-top: 10px;
+    }
+    .step {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>登录到注册页面跳转测试</h1>
+  
+  <div class="test-section">
+    <h2>测试步骤</h2>
+    <div class="steps">
+      <div class="step">1. 首先清除本地存储，确保测试环境干净</div>
+      <div class="step">2. 访问登录页面</div>
+      <div class="step">3. 在登录页面点击"没有账号？立即注册"按钮</div>
+      <div class="step">4. 观察是否成功跳转到注册页面而不返回登录页</div>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>测试按钮</h2>
+    <button id="clear-storage">清除本地存储</button>
+    <button id="go-login">访问登录页面</button>
+    <button id="go-register">直接访问注册页面</button>
+  </div>
+  
+  <script>
+    // 清除本地存储
+    document.getElementById('clear-storage').addEventListener('click', function() {
+      localStorage.clear();
+      console.log('本地存储已清除');
+      alert('本地存储已清除，请刷新页面后继续测试');
+    });
+    
+    // 访问登录页面
+    document.getElementById('go-login').addEventListener('click', function() {
+      console.log('正在访问登录页面');
+      window.location.href = 'http://localhost:3000/login';
+    });
+    
+    // 直接访问注册页面
+    document.getElementById('go-register').addEventListener('click', function() {
+      console.log('正在直接访问注册页面');
+      window.location.href = 'http://localhost:3000/register';
+    });
+    
+    // 页面加载时检查状态
+    window.onload = function() {
+      console.log('当前URL:', window.location.href);
+      console.log('本地存储内容:', Object.keys(localStorage));
+    };
+  </script>
+</body>
+</html>

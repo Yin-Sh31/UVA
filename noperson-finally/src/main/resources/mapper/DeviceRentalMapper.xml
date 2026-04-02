@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cty.nopersonfinally.mapper.DeviceRentalMapper">
+
+    <!-- 根据设备ID获取当前租借记录 -->
+    <select id="getCurrentRentalByDeviceId" resultType="com.cty.nopersonfinally.pojo.entity.DeviceRental">
+        SELECT * FROM device_rental
+        WHERE device_id = #{deviceId} AND rental_status = 1
+        ORDER BY rental_start_time DESC
+        LIMIT 1
+    </select>
+
+    <!-- 根据飞手ID获取租借历史记录 -->
+    <select id="getRentalHistoryByFlyerId" resultType="com.cty.nopersonfinally.pojo.entity.DeviceRental">
+        SELECT * FROM device_rental
+        WHERE flyer_id = #{flyerId}
+        ORDER BY rental_start_time DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+    <!-- 根据设备ID获取租借历史记录 -->
+    <select id="getRentalHistoryByDeviceId" resultType="com.cty.nopersonfinally.pojo.entity.DeviceRental">
+        SELECT * FROM device_rental
+        WHERE device_id = #{deviceId}
+        ORDER BY rental_start_time DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+    <!-- 更新租借记录状态 -->
+    <update id="updateRentalStatus">
+        UPDATE device_rental
+        SET rental_status = #{status}, rental_end_time = #{endTime}
+        WHERE rental_id = #{rentalId}
+    </update>
+
+</mapper>

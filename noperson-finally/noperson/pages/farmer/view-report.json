@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "查看巡检报告",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "navigation-bar": "/components/navigation-bar/navigation-bar"
+  }
+}

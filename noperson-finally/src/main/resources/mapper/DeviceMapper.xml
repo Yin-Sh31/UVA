@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cty.nopersonfinally.mapper.DeviceMapper">
+
+    <!-- 分页查询飞手的设备 -->
+    <select id="selectFlyerDevices" resultType="com.cty.nopersonfinally.pojo.entity.DroneDevice">
+        SELECT * FROM drone_device 
+        WHERE current_flyer_id = #{flyerId}
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+    </select>
+
+    <!-- 查询符合条件的空闲设备 -->
+    <select id="selectAvailableDevices" resultType="com.cty.nopersonfinally.pojo.entity.DroneDevice">
+        SELECT * FROM drone_device 
+        WHERE status = 1 
+        <if test="type != null">
+            AND type = #{type}
+        </if>
+        <if test="loadCapacity != null">
+            AND max_load >= #{loadCapacity}
+        </if>
+        <if test="enduranceTime != null">
+            AND endurance >= #{enduranceTime}
+        </if>
+    </select>
+    <select id="selectOwnerDevices" resultType="com.cty.nopersonfinally.pojo.entity.DroneDevice">
+        select * from drone_device where owner_id = #{ownerId}
+    </select>
+
+    <!-- 更新设备的最后维护时间 -->
+    <update id="updateLastMaintainTime">
+        UPDATE drone_device 
+        SET last_maintain_time = #{maintainTime}
+        WHERE device_id = #{id}
+    </update>
+    <update id="OwnerUpdateDeviceById">
+        UPDATE drone_device
+        <!-- 使用<trim>处理SET子句，自动去掉多余的逗号 -->
+        <trim prefix="SET" suffixOverrides=",">
+            <!-- 每个字段通过<if>判断：参数不为null时才生成更新语句 -->
+            <if test="deviceName != null">device_name = #{deviceName},</if>
+            <if test="deviceType != null">brand = #{deviceType},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="purchaseTime != null">purchase_time = #{purchaseTime},</if>
+            <if test="serialNumber != null">device_no = #{serialNumber},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        <!-- 必须通过唯一条件定位记录（如id），避免更新全表 -->
+        WHERE device_id = #{deviceId}
+
+    </update>
+
+</mapper>

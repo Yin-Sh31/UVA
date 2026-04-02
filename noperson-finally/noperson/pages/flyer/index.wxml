@@ -1,0 +1,140 @@
+<!-- flyer/index.wxml -->
+<view class="page-container">
+  <!-- 自定义导航栏 -->
+  <view class="custom-header">
+    <text class="header-title">农翼通 - 飞手版</text>
+  </view>
+  
+  <!-- 内容区域 -->
+  <view class="content-container">
+    <!-- 轮播图区域 -->
+    <view class="banner-container">
+      <swiper 
+        indicator-dots="{{true}}" 
+        autoplay="{{true}}" 
+        interval="5000" 
+        duration="500"
+        circular="{{true}}"
+      >
+        <block wx:for="{{bannerImages}}" wx:key="id">
+          <swiper-item>
+            <view 
+              class="banner-item" 
+              data-index="{{index}}" 
+              bindtap="onBannerClick"
+            >
+              <image 
+                src="{{item.imageUrl}}" 
+                mode="aspectFill" 
+                class="banner-image"
+              />
+              <view class="banner-title">{{item.title}}</view>
+            </view>
+          </swiper-item>
+        </block>
+        <!-- 备用轮播图 -->
+        <swiper-item wx:if="{{bannerImages.length === 0}}">
+          <view class="banner-item">
+            <image 
+              src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=农业科技无人机喷洒农药场景&image_size=landscape_16_9" 
+              mode="aspectFill" 
+              class="banner-image"
+            />
+            <view class="banner-title">欢迎使用农翼通</view>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+    
+    <!-- 导航键区域 -->
+    <view class="nav-section">
+    <view class="entry-item" bindtap="viewAllDemands">
+      <view class="entry-icon">
+        <text class="entry-text-icon">📝</text>
+      </view>
+      <text class="entry-text">全部需求</text>
+    </view>
+    <view class="entry-item" bindtap="viewQualification">
+      <view class="entry-icon">
+        <text class="entry-text-icon">📄</text>
+      </view>
+      <text class="entry-text">资质管理</text>
+    </view>
+    <view class="entry-item" bindtap="viewAllFarmers">
+      <view class="entry-icon">
+        <text class="entry-text-icon">👨‍🌾</text>
+      </view>
+      <text class="entry-text">所有农户</text>
+    </view>
+    <view class="entry-item" bindtap="viewEquipmentHall">
+      <view class="entry-icon">
+        <text class="entry-text-icon">🔧</text>
+      </view>
+      <text class="entry-text">设备大厅</text>
+    </view>
+  </view>
+  
+  <!-- 推荐信息区域 -->
+  <view class="featured-section">
+    <view class="featured-header">
+      <text class="featured-title">推荐信息</text>
+      <view class="refresh-btn" bindtap="refreshFeatured">
+        <text>刷新</text>
+        <image src="/assets/images/return-icon.png" mode="aspectFit"></image>
+      </view>
+    </view>
+    
+    <!-- 加载中状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <view class="loading-spinner"></view>
+      <text>加载中...</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{featuredList.length === 0 && !loading}}">
+      <image src="/assets/images/no-message.svg" mode="aspectFit"></image>
+      <text>暂无推荐信息</text>
+      <button class="refresh-btn" bindtap="refreshFeatured">刷新重试</button>
+    </view>
+    
+    <!-- 信息列表 -->
+    <view class="featured-list" wx:else>
+      <view class="featured-item" wx:for="{{featuredList}}" wx:key="id">
+        <!-- 需求卡片 -->
+        <view class="demand-card" wx:if="{{item.type === 'demand'}}">
+          <view class="demand-header">
+            <view class="demand-type {{item.subtype === 'inspection' ? 'inspection' : 'spray'}}">
+              {{item.subtype === 'inspection' ? '巡检' : '喷洒'}}
+            </view>
+            <text class="demand-status">{{item.status}}</text>
+          </view>
+          <view class="demand-info">
+            <text class="demand-location">{{item.location}}</text>
+            <text class="demand-area">{{item.area}}亩</text>
+            <text class="demand-price">¥{{item.price}}/亩</text>
+          </view>
+          <view class="demand-time">
+            <text>发布时间: {{item.time}}</text>
+          </view>
+        </view>
+        
+        <!-- 农户卡片 -->
+        <view class="farmer-card" wx:elif="{{item.type === 'farmer'}}">
+          <view class="farmer-header">
+            <image class="farmer-avatar" src="{{item.avatar || '/assets/images/user-avatar.png'}}"></image>
+            <view class="farmer-info">
+              <text class="farmer-name">{{item.name}}</text>
+              <text class="farmer-type">{{item.farmType}}</text>
+            </view>
+          </view>
+          <view class="farmer-details">
+            <text>位置: {{item.location}}</text>
+            <text>种植面积: {{item.farmArea}}亩</text>
+            <text>合作订单: {{item.completedOrders}}个</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+</view>

@@ -1,0 +1,75 @@
+<!-- farmer/chat/list.wxml -->
+<view class="container">
+  <navigation-bar back="true" title="消息"></navigation-bar>
+
+  <scroll-view
+    class="conversation-list"
+    scroll-y
+    bindscrolltolower="onReachBottom"
+    refresher-enabled
+    bindrefresherrefresh="onPullDownRefresh"
+    refresher-triggered="{{refreshing}}"
+  >
+    <view
+      class="conversation-item"
+      wx:for="{{conversationList}}"
+      wx:key="conversationId"
+      bindtap="goToChat"
+      data-conversationId="{{item.conversationId}}"
+      data-otherUserId="{{item.otherUserId}}"
+      data-otherUserName="{{item.otherUserName}}"
+      data-otherUserType="{{item.otherUserType}}"
+      data-otherUserAvatar="{{item.otherUserAvatar}}"
+    >
+      <view class="avatar">
+        <image wx:if="{{item.otherUserAvatar && item.otherUserAvatar.length > 0}}" src="{{item.otherUserAvatar}}" mode="aspectFill" lazy-load class="avatar-image"></image>
+        <text wx:if="{{!item.otherUserAvatar || item.otherUserAvatar.length === 0}}" class="avatar-text">{{item.otherUserName ? item.otherUserName.charAt(0) : '用'}}</text>
+      </view>
+      <view class="content">
+        <view class="header">
+          <text class="name">{{item.otherUserName}}</text>
+          <text class="user-type">{{item.otherUserId === 1 ? '管理员' : (item.otherUserType === 1 ? '农户' : (item.otherUserType === 2 ? '飞手' : (item.otherUserType === 3 ? '机主' : '用户')))}}</text>
+          <text class="time">{{item.formattedTime}}</text>
+        </view>
+        <view class="message">
+          <text class="last-message">{{item.lastMessageContent || '暂无消息'}}</text>
+          <view class="unread-badge" wx:if="{{item.unreadCount > 0}}">
+            <text class="unread-count">{{item.unreadCount > 99 ? '99+' : item.unreadCount}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="loading-tip" wx:if="{{loading && conversationList.length > 0}}">
+      <text>加载中...</text>
+    </view>
+
+    <view class="no-more" wx:if="{{!hasMore && conversationList.length > 0}}">
+      <text>没有更多了</text>
+    </view>
+
+    <view class="empty-state" wx:if="{{!loading && conversationList.length === 0}}">
+      <text class="empty-text">暂无消息</text>
+    </view>
+  </scroll-view>
+
+  <!-- 自定义底部导航栏 -->
+  <view class="custom-tab-bar fixed-bottom">
+    <view class="tab-item" bindtap="navigateToHome">
+      <text class="tab-icon">🏠</text>
+      <text>首页</text>
+    </view>
+    <view class="tab-item" bindtap="navigateToMyDemands">
+      <text class="tab-icon">📝</text>
+      <text>我的需求</text>
+    </view>
+    <view class="tab-item active">
+      <text class="tab-icon">💬</text>
+      <text>消息</text>
+    </view>
+    <view class="tab-item" bindtap="navigateToProfile">
+      <text class="tab-icon">👤</text>
+      <text>我的</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,104 @@
+{
+  "pages": [
+    "pages/auth/login",
+    "pages/index/index",
+    "pages/auth/register",
+    "pages/role-select/index",
+    "pages/farmer/index",
+    "pages/farmer/create-inspection-order",
+    "pages/farmer/publish-spray-demand",
+    "pages/farmer/my-demand-list",
+    "pages/farmer/demand-detail",
+    "pages/farmer/view-report",
+    "pages/farmer/profile",
+    "pages/farmer/favorite-address",
+    "pages/farmer/flyer-list",
+    "pages/farmer/flyer-detail",
+    "pages/farmer/message-center",
+    "pages/farmer/user-info",
+    "pages/farmer/chat/list",
+    "pages/farmer/chat/detail",
+    "pages/farmer/diagnosis-history",
+    "pages/flyer/index",
+    "pages/flyer/accept-order/index",
+    "pages/flyer/qualification/index",
+    "pages/flyer/upload-inspection/index",
+    "pages/flyer/my-order-list/index",
+    "pages/flyer/order-detail/index",
+    "pages/flyer/message-center/index",
+    "pages/flyer/chat/list",
+    "pages/flyer/chat/detail",
+    "pages/flyer/profile/index",
+    "pages/flyer/edit-profile/index",
+    "pages/flyer/all-farmers/index",
+    "pages/flyer/all-farmers/farmer-detail",
+    "pages/flyer/all-owners/index",
+    "pages/payment/create",
+    "pages/payment/status",
+    "pages/payment/wallet",
+    "pages/payment/history",
+    "pages/transaction/index",
+    "pages/evaluation/create",
+    "pages/evaluation/flyer-list",
+    "pages/flyer/equipment/index",
+    "pages/flyer/equipment/device-detail",
+    "pages/flyer/my-rentals/index",
+    "pages/flyer/current-rentals/index",
+    "pages/chat/chat"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "default"
+  },
+  "style": "v2",
+  "renderer": "skyline",
+  "rendererOptions": {
+    "skyline": {
+      "defaultDisplayBlock": true,
+      "defaultContentBox": true,
+      "disableABTest": true,
+      "sdkVersionBegin": "3.0.0",
+      "sdkVersionEnd": "15.255.255"
+    }
+  },
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于获取附近的服务"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
+  "requiredBackgroundModes": ["location"],
+  "requestDomain": ["https://restapi.amap.com", "https://apis.map.qq.com", "https://api.qweather.com"],
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1AAD19",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/flyer/index",
+        "text": "飞手首页"
+      },
+      {
+        "pagePath": "pages/flyer/accept-order/index",
+        "text": "需求大厅"
+      },
+      {
+        "pagePath": "pages/flyer/chat/list",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/flyer/profile/index",
+        "text": "我的"
+      }
+    ]
+  }
+}

@@ -1,0 +1,127 @@
+<!-- flyer/equipment/device-detail.wxml -->
+<view class="device-detail-container">
+  <navigation-bar title="设备详情" back="true" color="black" background="#FFF"></navigation-bar>
+  
+  <!-- 加载中状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text>加载中...</text>
+  </view>
+  
+  <!-- 设备信息 -->
+  <view class="device-info" wx:elif="{{deviceDetail}}">
+    <!-- 设备基本信息 -->
+    <view class="info-section">
+      <!-- 设备图片 -->
+      <view class="device-image-container">
+        <image class="device-image" src="{{deviceDetail.picture ? 'http://localhost:8082' + deviceDetail.picture : '/assets/images/user-info.png'}}" mode="aspectFit"></image>
+      </view>
+      
+      <view class="device-header">
+        <text class="device-name">{{deviceDetail.name || '无人机'}}</text>
+        <text class="device-type">{{deviceDetail.type || '未知型号'}}</text>
+      </view>
+      
+      <view class="device-status">
+        <view class="status-item {{deviceDetail.available ? 'available' : 'unavailable'}}">
+          <text class="status-dot"></text>
+          <text class="status-text">{{deviceDetail.available ? '可租借' : '不可租借'}}</text>
+        </view>
+        <text class="rent-price">租借价格：¥{{deviceDetail.rentPrice || 0}}/小时</text>
+      </view>
+    </view>
+    
+    <!-- 详细参数 -->
+    <view class="detail-section">
+      <view class="section-title">详细参数</view>
+      <view class="detail-list">
+        <view class="detail-row">
+          <text class="detail-label">设备编号：</text>
+          <text class="detail-value">{{deviceDetail.id}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">生产厂商：</text>
+          <text class="detail-value">{{deviceDetail.manufacturer || '--'}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">最大载重：</text>
+          <text class="detail-value">{{deviceDetail.maxLoad || 0}} kg</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">续航时间：</text>
+          <text class="detail-value">{{deviceDetail.maxFlightTime || 0}} min</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">最大飞行高度：</text>
+          <text class="detail-value">{{deviceDetail.maxFlightAltitude || 0}} m</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">飞行小时：</text>
+          <text class="detail-value">{{deviceDetail.flightHours || 0}} h</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">最近维护：</text>
+          <text class="detail-value">{{deviceDetail.lastMaintenanceDate || '从未维护'}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 维护记录 -->
+    <view class="maintenance-section">
+      <view class="section-title">维护记录</view>
+      <view class="maintenance-list" wx:if="{{deviceDetail.maintenanceRecords && deviceDetail.maintenanceRecords.length > 0}}">
+        <view class="maintenance-item" wx:for="{{deviceDetail.maintenanceRecords}}" wx:key="id">
+          <view class="maintenance-date">{{item.maintenanceDate}}</view>
+          <view class="maintenance-content">{{item.description || '常规维护'}}</view>
+        </view>
+      </view>
+      <view class="empty-record" wx:else>
+        <text>暂无维护记录</text>
+      </view>
+    </view>
+    
+    <!-- 机主信息 -->
+    <view class="owner-section">
+      <view class="section-title">机主信息</view>
+      <view class="owner-info">
+        <image class="owner-avatar" src="{{deviceDetail.ownerAvatar || '/assets/images/user-avatar.png'}}" mode="aspectFit"></image>
+        <view class="owner-details">
+          <text class="owner-name">{{deviceDetail.ownerName || '未知'}}</text>
+          <text class="owner-phone">{{deviceDetail.ownerPhone || '未知'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 错误状态 -->
+  <view class="error-state" wx:else>
+    <image src="/assets/images/error-icon.png" mode="aspectFit"></image>
+    <text>{{errorMessage || '加载失败，请重试'}}</text>
+    <button class="retry-btn" bindtap="loadDeviceDetail">重试</button>
+  </view>
+  
+
+  
+  <!-- 底部操作栏 - 确保总是显示，无论设备状态如何 -->
+  <view class="bottom-action">
+    <!-- 设备详情加载完成后才显示按钮 -->
+    <view wx:if="{{deviceDetail}}">
+      <!-- 可租借状态 -->
+      <button class="rent-btn" bindtap="rentDevice" type="primary" wx:if="{{deviceDetail.available && !deviceDetail.isRentedByMe}}">立即租借</button>
+      
+      <!-- 已租借状态（当前用户） -->
+      <view class="bottom-actions-group" wx:elif="{{deviceDetail.isRentedByMe}}">
+        <button class="return-btn" bindtap="returnDevice" type="primary">归还无人机</button>
+        <button class="cancel-rent-btn" bindtap="cancelRental">取消租借</button>
+      </view>
+      
+      <!-- 设备不可租借且未被当前用户租借时，显示提示信息 -->
+      <view class="status-info" wx:else>
+        <text wx:if="{{deviceDetail.rental_status === 1 || deviceDetail.rental_status === 'rented' || deviceDetail.rental_status === '已租借'}}">设备已被租借</text>
+        <text wx:elif="{{deviceDetail.rental_status === 2 || deviceDetail.rental_status === '审核中'}}">设备审核中</text>
+        <text wx:elif="{{deviceDetail.status === 'maintenance' || deviceDetail.status === 3 || deviceDetail.status === '维护中'}}">设备维护中</text>
+        <text wx:else>设备暂不可用</text>
+      </view>
+    </view>
+  </view>
+</view>

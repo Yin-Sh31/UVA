@@ -1,0 +1,51 @@
+<!-- flyer/all-owners/index.wxml -->
+<view class="flyer-owners-page">
+  <!-- 返回主页按钮 -->
+  <view class="back-home-btn" bindtap="backToHome">
+    <view class="back-home-icon"></view>
+  </view>
+  <view class="content-container">
+    <!-- 搜索框 -->
+    <view class="search-bar" wx:if="true">
+      <view class="search-input">
+        <text class="search-icon">🔍</text>
+        <input placeholder="搜索机主姓名、手机号" />
+      </view>
+    </view>
+    
+    <!-- 机主列表 -->
+    <view class="owners-list">
+      <!-- 列表加载中 -->
+      <view class="loading-state" wx:if="{{loading && owners.length === 0}}">
+        <text>加载中...</text>
+      </view>
+      
+      <!-- 列表为空时显示 -->
+      <view class="empty-state" wx:elif="{{owners.length === 0 && !loading}}">
+        <image src="/assets/images/no-message.svg" class="empty-image" mode="aspectFit" />
+        <text class="empty-text">暂无机主数据</text>
+      </view>
+      
+      <!-- 机主列表项 -->
+      <view class="owner-item" wx:for="{{owners}}" wx:key="userId" bindtap="viewOwnerDetail" data-id="{{item.userId}}">
+        <view class="owner-avatar">
+          <image src="{{item.avatar}}" mode="aspectFill" />
+        </view>
+        <view class="owner-info">
+          <view>
+            <text class="owner-name">{{item.username || '机主'}}</text>
+          </view>
+          <view>
+            <text class="owner-phone">{{item.phone || '未设置手机号'}}</text>
+          </view>
+        </view>
+        <view class="arrow-icon">→</view>
+      </view>
+    </view>
+    
+    <!-- 上拉加载更多提示 -->
+    <view class="load-more" wx:if="{{owners.length > 0 && !loading}}">
+      <text wx:if="{{currentPage * pageSize >= total}}">没有更多了</text>
+    </view>
+  </view>
+</view>

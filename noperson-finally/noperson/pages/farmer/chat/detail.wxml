@@ -1,0 +1,60 @@
+<!-- farmer/chat/detail.wxml -->
+<view class="container">
+  <view class="custom-nav-bar">
+    <view class="nav-back" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <view class="nav-title">
+      <text class="name">{{otherUserName}}</text>
+      <text class="user-type">{{otherUserType === 2 ? '飞手' : (otherUserType === 3 ? '机主' : '用户')}}</text>
+    </view>
+  </view>
+
+  <scroll-view
+    class="message-list"
+    scroll-y
+    scroll-into-view="{{toView}}"
+    bindscrolltolower="onReachBottom"
+    refresher-enabled
+    bindrefresherrefresh="onPullDownRefresh"
+    refresher-triggered="{{refreshing}}"
+  >
+    <view class="loading-tip" wx:if="{{loading && messages.length > 0}}">
+      <text>加载中...</text>
+    </view>
+
+    <view
+      wx:for="{{messages}}"
+      wx:key="messageId"
+      id="msg-{{item.messageId}}"
+      class="message-item {{item.fromMySelf ? 'sent' : 'received'}}"
+    >
+      <!-- 时间显示：需要显示时间时显示 -->
+      <view class="message-time" wx:if="{{item.showTime}}">
+        {{item.formattedTime}}
+      </view>
+      
+      <view class="message-content">
+        <view class="avatar" wx:if="{{!item.fromMySelf}}">
+          <image wx:if="{{item.senderAvatar && item.senderAvatar.length > 0}}" src="{{item.senderAvatar}}" mode="aspectFill" class="avatar-image"></image>
+          <text wx:if="{{!item.senderAvatar || item.senderAvatar.length === 0}}" class="avatar-text">{{item.senderName.charAt(0)}}</text>
+        </view>
+        <view class="bubble">
+          <text class="text">{{item.content}}</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="input-area">
+    <input
+      type="text"
+      class="input"
+      placeholder="输入消息..."
+      value="{{inputValue}}"
+      bindinput="onInputChange"
+      bindconfirm="sendMessage"
+    />
+    <button class="send-btn {{inputValue.trim() ? 'active' : ''}}" bindtap="sendMessage" disabled="{{!inputValue.trim()}}">发送</button>
+  </view>
+</view>

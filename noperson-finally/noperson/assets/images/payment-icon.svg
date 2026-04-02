@@ -1,0 +1,16 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 钱包背景 -->
+  <rect x="6" y="12" width="36" height="24" rx="4" fill="#3498db"/>
+  <!-- 钱包内部 -->
+  <rect x="9" y="15" width="30" height="18" rx="2" fill="#ecf0f1"/>
+  <!-- 钱包折叠部分 -->
+  <rect x="6" y="12" width="36" height="4" rx="4" fill="#2980b9"/>
+  <!-- 银行卡 -->
+  <rect x="12" y="18" width="24" height="10" rx="1" fill="#f39c12"/>
+  <!-- 银行卡芯片 -->
+  <rect x="14" y="21" width="4" height="4" fill="#34495e"/>
+  <!-- 银行卡条纹 -->
+  <rect x="20" y="21" width="12" height="1" fill="#34495e"/>
+  <rect x="20" y="23" width="12" height="1" fill="#34495e"/>
+  <rect x="20" y="25" width="8" height="1" fill="#34495e"/>
+</svg>

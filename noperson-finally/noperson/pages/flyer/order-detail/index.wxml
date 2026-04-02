@@ -1,0 +1,56 @@
+<view class="container">
+  <!-- 自定义导航栏 - 修复返回键显示 -->
+  <navigation-bar back="true" title="订单详情" background="#FFFFFF"></navigation-bar>
+  
+  <!-- 订单基本信息卡片 -->
+  <view class="order-card">
+    <view class="order-header">
+      <view class="order-id">订单编号：{{orderInfo.id}}</view>
+      <view class="order-status status-{{orderInfo.status}}">{{getStatusText(orderInfo.status)}}</view>
+    </view>
+    
+    <view class="order-info">
+      <view class="info-row">
+        <view class="info-label">订单类型：</view>
+        <view class="info-value">{{orderInfo.type === 1 ? '喷洒订单' : '巡检订单'}}</view>
+      </view>
+      <view class="info-row">
+        <view class="info-label">接单时间：</view>
+        <view class="info-value">{{orderInfo.acceptTime}}</view>
+      </view>
+      <view class="info-row">
+        <view class="info-label">服务面积：</view>
+        <view class="info-value">{{orderInfo.landArea || orderInfo.area || 0}} 亩</view>
+      </view>
+      <view class="info-row">
+        <view class="info-label">服务地点：</view>
+        <view class="info-value">{{orderInfo.location}}</view>
+      </view>
+      <view class="info-row">
+        <view class="info-label">服务费用：</view>
+        <view class="info-value">¥{{orderInfo.paymentAmount || orderInfo.amount || '0.00'}}</view>
+      </view>
+      <view class="info-row">
+        <view class="info-label">农户姓名：</view>
+        <view class="info-value">{{orderInfo.farmerName || '匿名农户'}}</view>
+      </view>
+      <view class="info-row">
+        <view class="info-label">联系方式：</view>
+        <view class="info-value">{{orderInfo.contactPhone || '138****1234'}}</view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 订单操作按钮 -->
+  <view class="order-actions">
+    <button class="action-btn contact-btn" bindtap="contactFarmer">联系农户</button>
+    <button class="action-btn start-btn" wx:if="{{orderInfo.status === 0 || orderInfo.status === 1}}" bindtap="startService">开始服务</button>
+    <button class="action-btn complete-btn" wx:if="{{orderInfo.status === 1 || orderInfo.status === 2 || orderInfo.status === 3}}" bindtap="completeService">确认订单</button>
+  </view>
+  
+  <!-- 订单备注 -->
+  <view class="order-notes" wx:if="{{orderInfo.notes}}">
+    <view class="notes-title">订单备注</view>
+    <view class="notes-content">{{orderInfo.notes}}</view>
+  </view>
+</view>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cty.nopersonfinally.mapper.FlyerEvaluationMapper">
+
+    <select id="getByFlyerId" resultType="com.cty.nopersonfinally.pojo.entity.FlyerEvaluation">
+        SELECT fe.* FROM flyer_evaluation fe
+        LEFT JOIN user_flyer uf ON fe.flyer_id = uf.flyer_id
+        LEFT JOIN sys_user su ON uf.user_id = su.user_id
+        WHERE fe.flyer_id = #{flyerId}
+        ORDER BY fe.created_at DESC
+    </select>
+
+    <select id="calculateTotalScore" resultType="java.lang.Double">
+        SELECT AVG((fe.score_quality + fe.score_punctuality + fe.score_attitude + fe.score_efficiency) / 4.0) AS total_score
+        FROM flyer_evaluation fe
+        LEFT JOIN user_flyer uf ON fe.flyer_id = uf.flyer_id
+        LEFT JOIN sys_user su ON uf.user_id = su.user_id
+        WHERE fe.flyer_id = #{flyerId}
+    </select>
+
+    <select id="calculatePositiveRate" resultType="java.lang.Double">
+        SELECT 
+            (COUNT(CASE WHEN (fe.score_quality + fe.score_punctuality + fe.score_attitude + fe.score_efficiency) > 14 THEN 1 END) * 100.0 / COUNT(*)) AS positive_rate
+        FROM flyer_evaluation fe
+        LEFT JOIN user_flyer uf ON fe.flyer_id = uf.flyer_id
+        LEFT JOIN sys_user su ON uf.user_id = su.user_id
+        WHERE fe.flyer_id = #{flyerId}
+    </select>
+
+    <select id="countByFlyerId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM flyer_evaluation fe
+        LEFT JOIN user_flyer uf ON fe.flyer_id = uf.flyer_id
+        LEFT JOIN sys_user su ON uf.user_id = su.user_id
+        WHERE fe.flyer_id = #{flyerId}
+    </select>
+
+    <select id="getByOrderAndFarmer" resultType="com.cty.nopersonfinally.pojo.entity.FlyerEvaluation">
+        SELECT * FROM flyer_evaluation
+        WHERE order_id = #{orderId} AND farmer_id = #{farmerId}
+    </select>
+
+    <select id="getFlyerByUserId" resultType="com.cty.nopersonfinally.pojo.entity.UserFlyer">
+        SELECT * FROM user_flyer
+        WHERE user_id = #{userId} AND is_deleted = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,49 @@
+<!-- flyer/equipment/index.wxml -->
+<view class="equipment-container">
+  <navigation-bar title="设备大厅" back="false" color="black" background="#FFF"></navigation-bar>
+  
+  <!-- 设备列表 -->
+  <scroll-view 
+    class="equipment-scroll"
+    scroll-y
+    refresher-enabled="true"
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onRefresh"
+  >
+    <!-- 加载中状态 -->
+    <view class="loading-state" wx:if="{{loading && equipmentList.length === 0}}">
+      <view class="loading-spinner"></view>
+      <text>加载中...</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{equipmentList.length === 0 && !loading}}">
+      <image src="/assets/images/no-message.svg" mode="aspectFit"></image>
+      <text>暂无可用设备</text>
+    </view>
+    
+    <!-- 设备列表 - 双列网格布局 -->
+    <view class="equipment-grid" wx:else>
+      <view 
+        wx:for="{{equipmentList}}" 
+        wx:key="id"
+        class="equipment-item"
+        bindtap="viewDeviceDetail"
+        data-id="{{item.id}}"
+      >
+        <view class="equipment-image-container">
+          <image class="equipment-image" src="{{item.picture || '/assets/images/user-info.png'}}" mode="aspectFill"></image>
+          <!-- 状态指示器 -->
+          <view class="status-badge {{item.available ? 'available' : 'unavailable'}}">
+            {{item.available ? '可租借' : '已借出'}}
+          </view>
+        </view>
+        
+        <view class="device-info">
+          <text class="device-name">{{item.name || '无人机'}}</text>
+          <text class="device-type">{{item.type || '未知型号'}}</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        .log {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Token测试工具</h1>
+    
+    <div class="container">
+        <h2>1. 设置Token</h2>
+        <p>当前环境中，系统只接受 'mock-token' 作为有效的token</p>
+        <button id="setMockToken">设置 Mock Token</button>
+        <button id="clearToken">清除 Token</button>
+        <div id="tokenStatus"></div>
+    </div>
+
+    <div class="container">
+        <h2>2. 测试设备列表API</h2>
+        <p>测试后端设备列表接口是否正常工作</p>
+        <button id="testDeviceApi">测试设备列表API</button>
+        <div id="apiResultStatus"></div>
+        
+        <h3>API响应日志：</h3>
+        <div id="apiResponseLog" class="log">等待测试...</div>
+    </div>
+
+    <div class="container">
+        <h2>3. 访问设备管理页面</h2>
+        <p>设置token后，可以直接访问设备管理页面</p>
+        <button id="goToDevicesPage">前往设备管理页面</button>
+    </div>
+
+    <script>
+        // 设置mock token
+        document.getElementById('setMockToken').addEventListener('click', function() {
+            localStorage.setItem('token', 'mock-token');
+            document.getElementById('tokenStatus').innerHTML = '<p class="success">✓ Mock Token 已设置</p>';
+            console.log('Mock Token已设置到localStorage');
+        });
+
+        // 清除token
+        document.getElementById('clearToken').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            document.getElementById('tokenStatus').innerHTML = '<p class="error">✗ Token 已清除</p>';
+            console.log('Token已从localStorage清除');
+        });
+
+        // 测试设备列表API
+        document.getElementById('testDeviceApi').addEventListener('click', async function() {
+            const statusDiv = document.getElementById('apiResultStatus');
+            const logDiv = document.getElementById('apiResponseLog');
+            
+            statusDiv.innerHTML = '<p>正在测试...</p>';
+            logDiv.innerHTML = '发送请求中...';
+            
+            try {
+                const token = localStorage.getItem('token');
+                
+                if (!token) {
+                    statusDiv.innerHTML = '<p class="error">✗ 错误：请先设置Token</p>';
+                    logDiv.innerHTML = '未找到token，请先点击"设置 Mock Token"按钮';
+                    return;
+                }
+                
+                logDiv.innerHTML = `使用Token: ${token}\n发送请求到: http://localhost:8082/api/device/list?pageNum=1&pageSize=10`;
+                
+                const response = await fetch('http://localhost:8082/api/device/list?pageNum=1&pageSize=10', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const responseText = await response.text();
+                logDiv.innerHTML += `\n\n响应状态: ${response.status} ${response.statusText}\n响应内容:\n`;
+                
+                // 尝试格式化JSON
+                try {
+                    const parsedData = JSON.parse(responseText);
+                    logDiv.innerHTML += JSON.stringify(parsedData, null, 2);
+                } catch (e) {
+                    logDiv.innerHTML += responseText;
+                }
+                
+                if (response.ok) {
+                    statusDiv.innerHTML = '<p class="success">✓ API请求成功</p>';
+                } else {
+                    statusDiv.innerHTML = `<p class="error">✗ API请求失败: ${response.status} ${response.statusText}</p>`;
+                }
+                
+            } catch (error) {
+                statusDiv.innerHTML = `<p class="error">✗ 错误: ${error.message}</p>`;
+                logDiv.innerHTML += `\n\n错误: ${error.message}`;
+                console.error('API测试失败:', error);
+            }
+        });
+
+        // 前往设备管理页面
+        document.getElementById('goToDevicesPage').addEventListener('click', function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('请先设置Token，否则将无法正常访问设备管理页面');
+            }
+            window.location.href = 'http://localhost:3000/devices';
+        });
+
+        // 页面加载时检查token状态
+        window.onload = function() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                document.getElementById('tokenStatus').innerHTML = `<p class="success">✓ 当前已存在Token: ${token}</p>`;
+            } else {
+                document.getElementById('tokenStatus').innerHTML = '<p class="error">✗ 当前无Token</p>';
+            }
+        };
+    </script>
+</body>
+</html>

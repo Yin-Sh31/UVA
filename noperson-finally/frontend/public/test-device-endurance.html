@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试设备API - Endurance字段</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        .highlight {
+            background-color: #ffffcc;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>设备API - Endurance字段测试工具</h1>
+        
+        <div>
+            <button class="btn" onclick="testDeviceAPI()">调用设备列表API</button>
+            <button class="btn" onclick="testDeviceDetail()">调用设备详情API</button>
+            <button class="btn" onclick="showRawResponse()">显示原始响应</button>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('response')">完整响应</div>
+            <div class="tab" onclick="switchTab('parsed')">解析后数据</div>
+            <div class="tab" onclick="switchTab('endurance')">Endurance字段检查</div>
+        </div>
+        
+        <div id="response" class="tab-content active">
+            <h2>API响应内容</h2>
+            <pre id="responseContent">请点击按钮调用API...</pre>
+        </div>
+        
+        <div id="parsed" class="tab-content">
+            <h2>解析后的数据结构</h2>
+            <pre id="parsedContent">请点击按钮调用API...</pre>
+        </div>
+        
+        <div id="endurance" class="tab-content">
+            <h2>Endurance字段检查结果</h2>
+            <pre id="enduranceContent">请点击按钮调用API...</pre>
+        </div>
+    </div>
+
+    <script>
+        let lastResponse = null;
+        let apiUrl = 'http://localhost:8080/api/device';
+        
+        function getAuthToken() {
+            // 从localStorage获取token，根据实际项目的token存储方式调整
+            return localStorage.getItem('token') || sessionStorage.getItem('token');
+        }
+        
+        async function testDeviceAPI() {
+            const token = getAuthToken();
+            if (!token) {
+                document.getElementById('responseContent').textContent = '错误: 未找到认证token，请先登录系统';
+                document.getElementById('parsedContent').textContent = '错误: 未找到认证token，请先登录系统';
+                document.getElementById('enduranceContent').textContent = '错误: 未找到认证token，请先登录系统';
+                return;
+            }
+            
+            try {
+                document.getElementById('responseContent').textContent = '加载中...';
+                document.getElementById('parsedContent').textContent = '加载中...';
+                document.getElementById('enduranceContent').textContent = '加载中...';
+                
+                const response = await fetch(`${apiUrl}/all?pageNum=1&pageSize=10`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const text = await response.text();
+                lastResponse = text;
+                
+                // 显示原始响应
+                document.getElementById('responseContent').textContent = text;
+                
+                // 解析JSON并显示结构
+                try {
+                    const data = JSON.parse(text);
+                    document.getElementById('parsedContent').textContent = formatDataStructure(data);
+                    
+                    // 检查endurance字段
+                    checkEnduranceField(data);
+                } catch (jsonError) {
+                    document.getElementById('parsedContent').textContent = `JSON解析错误: ${jsonError.message}`;
+                    document.getElementById('enduranceContent').textContent = `JSON解析错误: ${jsonError.message}`;
+                }
+                
+            } catch (error) {
+                document.getElementById('responseContent').textContent = `请求错误: ${error.message}`;
+                document.getElementById('parsedContent').textContent = `请求错误: ${error.message}`;
+                document.getElementById('enduranceContent').textContent = `请求错误: ${error.message}`;
+            }
+        }
+        
+        async function testDeviceDetail() {
+            // 可以根据需要实现设备详情API测试
+            document.getElementById('responseContent').textContent = '设备详情API测试功能待实现';
+        }
+        
+        function showRawResponse() {
+            if (lastResponse) {
+                document.getElementById('responseContent').textContent = lastResponse;
+            } else {
+                document.getElementById('responseContent').textContent = '请先调用API获取响应';
+            }
+        }
+        
+        function formatDataStructure(obj, indent = 0) {
+            const space = '  '.repeat(indent);
+            if (obj === null) return space + 'null';
+            if (typeof obj !== 'object') return space + typeof obj + ': ' + JSON.stringify(obj);
+            
+            let result = '';
+            if (Array.isArray(obj)) {
+                result += space + 'Array[' + obj.length + ']\n' + space + '[';
+                if (obj.length > 0) {
+                    result += '\n';
+                    if (obj.length <= 3) {
+                        // 如果数组长度小，显示所有元素
+                        obj.forEach((item, index) => {
+                            result += formatDataStructure(item, indent + 1);
+                            if (index < obj.length - 1) result += ',';
+                            result += '\n';
+                        });
+                    } else {
+                        // 如果数组长度大，只显示前3个元素
+                        obj.slice(0, 3).forEach((item, index) => {
+                            result += formatDataStructure(item, indent + 1);
+                            if (index < 2) result += ',';
+                            result += '\n';
+                        });
+                        result += space + '  ... 还有 ' + (obj.length - 3) + ' 个元素';
+                    }
+                }
+                result += space + ']';
+            } else {
+                const keys = Object.keys(obj);
+                result += space + 'Object{' + keys.length + '}';
+                if (keys.length > 0) {
+                    result += '\n' + space + '{' + '\n';
+                    keys.forEach((key, index) => {
+                        result += space + '  "' + key + '": ' + formatDataStructure(obj[key], indent + 1).substring(indent + 2);
+                        if (index < keys.length - 1) result += ',';
+                        result += '\n';
+                    });
+                    result += space + '}';
+                }
+            }
+            return result;
+        }
+        
+        function checkEnduranceField(data) {
+            let result = 'Endurance字段检查结果:\n\n';
+            
+            if (!data) {
+                result += '❌ 响应数据为空';
+                document.getElementById('enduranceContent').textContent = result;
+                return;
+            }
+            
+            // 检查响应结构
+            result += '1. 响应结构分析:\n';
+            if (data.code) result += `- 状态码: ${data.code}\n`;
+            if (data.message) result += `- 消息: ${data.message}\n`;
+            
+            // 检查数据部分
+            result += '\n2. 数据部分检查:\n';
+            if (!data.data) {
+                result += '❌ 响应中没有data字段\n';
+            } else {
+                result += '✅ 找到data字段\n';
+                result += `- data类型: ${typeof data.data}\n`;
+                
+                // 检查records
+                if (data.data.records) {
+                    result += '✅ 找到records数组\n';
+                    result += `- records长度: ${data.data.records.length}\n`;
+                    
+                    if (data.data.records.length > 0) {
+                        result += '\n3. 设备记录分析:\n';
+                        data.data.records.forEach((record, index) => {
+                            if (index < 3) { // 只分析前3条记录
+                                result += `\n设备${index + 1}:\n`;
+                                
+                                // 检查record对象的所有字段
+                                const recordKeys = Object.keys(record);
+                                result += `- 记录包含字段: ${recordKeys.join(', ')}\n`;
+                                
+                                // 检查deviceInfo字段
+                                if (record.deviceInfo) {
+                                    result += '✅ 找到deviceInfo字段\n';
+                                    const deviceInfoKeys = Object.keys(record.deviceInfo);
+                                    result += `- deviceInfo包含字段: ${deviceInfoKeys.join(', ')}\n`;
+                                    
+                                    // 检查endurance字段
+                                    if (record.deviceInfo.endurance !== undefined) {
+                                        result += `✅ 找到endurance字段! 值为: ${record.deviceInfo.endurance}\n`;
+                                        result += `- endurance类型: ${typeof record.deviceInfo.endurance}\n`;
+                                    } else {
+                                        result += '❌ deviceInfo中未找到endurance字段\n';
+                                    }
+                                } else {
+                                    result += '❌ 未找到deviceInfo字段\n';
+                                }
+                                
+                                // 直接检查record对象中的endurance字段
+                                if (record.endurance !== undefined) {
+                                    result += `⚠️ 在record对象中找到endurance字段! 值为: ${record.endurance}\n`;
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    result += '❌ data中没有records字段\n';
+                    // 显示data对象的所有字段
+                    const dataKeys = Object.keys(data.data);
+                    result += `- data包含字段: ${dataKeys.join(', ')}\n`;
+                }
+            }
+            
+            // 检查所有可能的endurance相关字段
+            result += '\n4. 检查所有可能的endurance相关字段:\n';
+            const enduranceKeywords = ['endurance', 'enduranceTime', 'endurancetime', 'endurance_time', '续航', '续航时间'];
+            
+            enduranceKeywords.forEach(keyword => {
+                const found = searchNestedObject(data, keyword);
+                if (found.length > 0) {
+                    result += `✅ 找到与"${keyword}"相关的字段:\n`;
+                    found.forEach(item => {
+                        result += `  - ${item.path}: ${item.value}\n`;
+                    });
+                } else {
+                    result += `❌ 未找到与"${keyword}"相关的字段\n`;
+                }
+            });
+            
+            document.getElementById('enduranceContent').textContent = result;
+        }
+        
+        function searchNestedObject(obj, keyword, path = 'data') {
+            const results = [];
+            
+            if (!obj || typeof obj !== 'object') return results;
+            
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    const currentPath = path + '.' + key;
+                    
+                    // 检查键名是否包含关键词
+                    if (key.toLowerCase().includes(keyword.toLowerCase())) {
+                        results.push({
+                            path: currentPath,
+                            value: obj[key]
+                        });
+                    }
+                    
+                    // 递归搜索嵌套对象
+                    if (typeof obj[key] === 'object' && obj[key] !== null) {
+                        results.push(...searchNestedObject(obj[key], keyword, currentPath));
+                    }
+                }
+            }
+            
+            return results;
+        }
+        
+        function switchTab(tabId) {
+            // 隐藏所有tab内容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有tab的active状态
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的tab内容
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<navigation-bar title="首页" back="false" color="black" background="#FFF"></navigation-bar>
+<!-- 导航栏组件 -->
+<navigation-bar
+  title="{{pageTitle}}"
+  background="#ffffff"
+  color="#333333"
+  back="false"
+  show-message-icon="true"
+  bind:message-tap="onMessageTap"
+/>
+
+<!-- 农户首页 -->
+<view wx:if="{{userRole === 'farmer'}}" class="farmer-home">
+  <!-- 顶部卡片（占屏 1/3） -->
+  <view class="top-card">
+    <text class="top-card-title">发布农业服务需求</text>
+    <text class="top-card-subtitle">巡检 / 喷洒一键发起</text>
+    <view class="button-group">
+      <button class="gradient-button inspection" bindtap="publishInspection">发布巡检需求</button>
+      <button class="gradient-button spray" bindtap="publishSpray">发布喷洒需求</button>
+    </view>
+  </view>
+  
+  <!-- 中部模块（订单概览） -->
+  <view class="orders-section">
+    <text class="section-title">我的需求进度</text>
+    <view class="orders-list">
+      <view wx:for="{{farmerOrders}}" wx:key="id" class="order-card" bindtap="viewRequestDetail" data-id="{{item.id}}">
+        <view class="order-info">
+          <text class="order-type">{{item.type}}</text>
+          <text class="order-location">{{item.location}}</text>
+        </view>
+        <text class="order-status">{{item.status}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 底部模块（快捷入口） -->
+  <view class="quick-access">
+    <view class="access-item" bindtap="viewReports">
+      <view class="access-icon report"></view>
+      <text class="access-name">我的巡检报告</text>
+    </view>
+    <view class="access-item" bindtap="contactService">
+      <view class="access-icon service"></view>
+      <text class="access-name">联系客服</text>
+    </view>
+  </view>
+</view>
+
+<!-- 飞手首页 -->
+<view wx:elif="{{userRole === 'flyer'}}" class="flyer-home">
+  <!-- 顶部筛选栏 -->
+  <view class="filter-bar">
+    <view class="filter-tabs">
+      <view class="filter-tab {{selectedTab === '全部需求' ? 'active' : ''}}" data-tab="全部需求" bindtap="onTabChange">全部需求</view>
+      <view class="filter-tab {{selectedTab === '巡检需求' ? 'active' : ''}}" data-tab="巡检需求" bindtap="onTabChange">巡检需求</view>
+      <view class="filter-tab {{selectedTab === '喷洒需求' ? 'active' : ''}}" data-tab="喷洒需求" bindtap="onTabChange">喷洒需求</view>
+    </view>
+    <view class="distance-filter">
+      <picker bindchange="onDistanceChange" range="['5km内', '10km内', '不限']" class="distance-picker">
+        <view class="picker-text">距离筛选</view>
+      </picker>
+    </view>
+  </view>
+  
+  <!-- 农户推荐信息 -->
+  <view class="farmers-section">
+    <text class="section-title">推荐农户</text>
+    <view class="farmers-list">
+      <view wx:for="{{farmerOrders}}" wx:key="id" class="farmer-card">
+        <image class="farmer-avatar" src="{{item.avatar || '/assets/images/user-avatar.png'}}" mode="aspectFill"></image>
+        <view class="farmer-info">
+          <text class="farmer-name">{{item.farmerName}}</text>
+          <text class="farmer-location">{{item.location}}</text>
+          <view class="farmer-stats">
+            <text class="stat-item">发布需求：{{item.demandCount}}单</text>
+            <text class="stat-item">加入时间：{{item.joinTime}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 中部需求列表（占屏 2/3） -->
+  <view class="requests-section">
+    <view wx:for="{{flyerRequests}}" wx:key="id" class="request-card">
+      <view class="request-header">
+        <text class="request-type {{item.type === '巡检' ? 'inspection' : 'spray'}}">{{item.type}}</text>
+      </view>
+      <view class="request-info">
+        <text class="request-address">地块地址：{{item.address}}</text>
+        <text class="request-time">期望时间：{{item.expectedTime}}</text>
+        <text class="request-budget">预算：¥{{item.budget}}</text>
+        <text class="request-status">状态：{{item.status}}</text>
+      </view>
+      <view class="request-actions">
+        <button class="detail-button" bindtap="viewRequestDetail" data-id="{{item.id}}" size="mini">查看详情</button>
+        <button class="accept-button" bindtap="acceptOrder" data-id="{{item.id}}" size="mini">一键接单</button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 底部提示条 -->
+  <view class="bottom-tip">
+    <text class="tip-text">展示所有可接取的需求，可通过筛选条件查看特定需求</text>
+  </view>
+</view>

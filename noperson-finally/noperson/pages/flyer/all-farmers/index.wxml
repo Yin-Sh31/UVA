@@ -1,0 +1,51 @@
+<!-- flyer/all-farmers/index.wxml -->
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <navigation-bar back="true" title="所有农户"></navigation-bar>
+  
+  <!-- 可滚动内容区域 -->
+  <view class="scrollable-content">
+    <!-- 搜索框 (暂时禁用，需要实现onSearchInput方法) -->
+    <view class="search-bar" wx:if="false">
+      <view class="search-input">
+        <text class="search-icon">🔍</text>
+        <input placeholder="搜索农户姓名、手机号" />
+      </view>
+    </view>
+    
+    <!-- 农户列表 -->
+    <view class="farmers-list">
+      <!-- 列表加载中 -->
+      <view class="loading-state" wx:if="{{loading && farmers.length === 0}}">
+        <text>加载中...</text>
+      </view>
+      
+      <!-- 列表为空时显示 -->
+      <view class="empty-state" wx:elif="{{farmers.length === 0 && !loading}}">
+        <image src="/assets/images/no-message.svg" class="empty-image" mode="aspectFit" />
+        <text class="empty-text">暂无农户数据</text>
+      </view>
+      
+      <!-- 农户列表项 -->
+      <view class="farmer-item" wx:for="{{farmers}}" wx:key="userId" bindtap="viewFarmerDetail" data-id="{{item.userId}}">
+        <view class="farmer-avatar">
+          <image src="{{item.avatar}}" mode="aspectFill" />
+        </view>
+        <view class="farmer-info">
+          <view>
+            <text class="farmer-name">{{item.username || '农户'}}</text>
+          </view>
+          <view>
+            <text class="farmer-phone">{{item.phone}}</text>
+          </view>
+        </view>
+        <view class="arrow-icon">→</view>
+      </view>
+    </view>
+    
+    <!-- 上拉加载更多提示 -->
+    <view class="load-more" wx:if="{{farmers.length > 0 && !loading}}">
+      <text wx:if="{{currentPage * pageSize >= total}}">没有更多了</text>
+    </view>
+  </view>
+</view>

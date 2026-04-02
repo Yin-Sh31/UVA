@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试真实API</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36CFC9',
+                        success: '#52C41A',
+                        warning: '#FAAD14',
+                        danger: '#F5222D',
+                        info: '#1890FF',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .shadow-custom {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-3xl">
+        <div class="bg-white rounded-lg shadow-custom p-6 mb-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fa fa-cogs text-primary mr-2"></i>
+                设备列表API测试
+            </h1>
+            
+            <div class="space-y-6">
+                <!-- Token设置区域 -->
+                <div class="p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <h2 class="text-lg font-semibold text-gray-700 mb-3">
+                        <i class="fa fa-key text-primary mr-2"></i>
+                        Token管理
+                    </h2>
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <input 
+                            type="text" 
+                            id="tokenInput" 
+                            class="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                            placeholder="输入Token" 
+                            value="mock-token"
+                        >
+                        <button 
+                            id="setTokenBtn" 
+                            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-all-300 flex items-center justify-center"
+                        >
+                            <i class="fa fa-save mr-2"></i>
+                            设置Token
+                        </button>
+                        <button 
+                            id="clearTokenBtn" 
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-all-300 flex items-center justify-center"
+                        >
+                            <i class="fa fa-trash mr-2"></i>
+                            清除Token
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- API测试区域 -->
+                <div class="p-4 border border-gray-200 rounded-lg">
+                    <h2 class="text-lg font-semibold text-gray-700 mb-3">
+                        <i class="fa fa-bolt text-primary mr-2"></i>
+                        API测试
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">页码:</label>
+                            <input 
+                                type="number" 
+                                id="pageNum" 
+                                class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-24" 
+                                value="1"
+                                min="1"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">每页数量:</label>
+                            <input 
+                                type="number" 
+                                id="pageSize" 
+                                class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-24" 
+                                value="10"
+                                min="1"
+                                max="100"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">状态筛选:</label>
+                            <select 
+                                id="statusFilter" 
+                                class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-40"
+                            >
+                                <option value="">全部状态</option>
+                                <option value="1">正常</option>
+                                <option value="2">维护中</option>
+                                <option value="3">故障</option>
+                                <option value="4">停用</option>
+                            </select>
+                        </div>
+                        <button 
+                            id="testApiBtn" 
+                            class="w-full px-6 py-3 bg-primary text-white rounded-md hover:bg-primary/90 transition-all-300 flex items-center justify-center font-medium"
+                        >
+                            <i class="fa fa-play-circle mr-2"></i>
+                            测试设备列表API
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 结果显示区域 -->
+                <div class="p-4 border border-gray-200 rounded-lg">
+                    <h2 class="text-lg font-semibold text-gray-700 mb-3">
+                        <i class="fa fa-code text-primary mr-2"></i>
+                        API响应结果
+                    </h2>
+                    <div class="bg-gray-50 p-4 rounded-md overflow-auto max-h-80">
+                        <pre id="responseResult" class="text-sm text-gray-700 whitespace-pre-wrap"></pre>
+                    </div>
+                </div>
+                
+                <!-- 快捷操作区域 -->
+                <div class="p-4 border border-gray-200 rounded-lg bg-primary/5">
+                    <h2 class="text-lg font-semibold text-gray-700 mb-3">
+                        <i class="fa fa-bolt text-primary mr-2"></i>
+                        快捷操作
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button 
+                            id="goToDevicesBtn" 
+                            class="px-6 py-3 bg-success text-white rounded-md hover:bg-success/90 transition-all-300 flex items-center justify-center font-medium"
+                        >
+                            <i class="fa fa-table mr-2"></i>
+                            访问设备管理页面
+                        </button>
+                        <button 
+                            id="checkTokenBtn" 
+                            class="px-6 py-3 bg-info text-white rounded-md hover:bg-info/90 transition-all-300 flex items-center justify-center font-medium"
+                        >
+                            <i class="fa fa-check-circle mr-2"></i>
+                            检查Token状态
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 信息提示卡片 -->
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <h3 class="text-md font-semibold text-gray-700 mb-2 flex items-center">
+                <i class="fa fa-info-circle text-info mr-2"></i>
+                使用说明
+            </h3>
+            <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                <li>1. 首先设置Token（默认已填入mock-token）</li>
+                <li>2. 然后点击「测试设备列表API」检查API是否正常</li>
+                <li>3. 最后点击「访问设备管理页面」查看实际效果</li>
+                <li>4. 如果API返回401错误，请检查Token是否正确</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // DOM元素
+        const tokenInput = document.getElementById('tokenInput');
+        const setTokenBtn = document.getElementById('setTokenBtn');
+        const clearTokenBtn = document.getElementById('clearTokenBtn');
+        const testApiBtn = document.getElementById('testApiBtn');
+        const goToDevicesBtn = document.getElementById('goToDevicesBtn');
+        const checkTokenBtn = document.getElementById('checkTokenBtn');
+        const responseResult = document.getElementById('responseResult');
+        const pageNum = document.getElementById('pageNum');
+        const pageSize = document.getElementById('pageSize');
+        const statusFilter = document.getElementById('statusFilter');
+        
+        // 设置Token
+        setTokenBtn.addEventListener('click', () => {
+            const token = tokenInput.value.trim();
+            if (token) {
+                localStorage.setItem('token', token);
+                showMessage('Token设置成功！', 'success');
+            } else {
+                showMessage('请输入有效的Token', 'error');
+            }
+        });
+        
+        // 清除Token
+        clearTokenBtn.addEventListener('click', () => {
+            localStorage.removeItem('token');
+            tokenInput.value = '';
+            showMessage('Token已清除', 'info');
+        });
+        
+        // 检查Token状态
+        checkTokenBtn.addEventListener('click', () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                showMessage(`当前Token: ${token}`, 'success');
+            } else {
+                showMessage('未设置Token', 'warning');
+            }
+        });
+        
+        // 测试API
+        testApiBtn.addEventListener('click', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                showMessage('请先设置Token', 'error');
+                return;
+            }
+            
+            // 清空之前的结果
+            responseResult.textContent = '请求中...';
+            
+            try {
+                // 构建请求参数
+                const params = new URLSearchParams();
+                params.append('pageNum', pageNum.value);
+                params.append('pageSize', pageSize.value);
+                if (statusFilter.value) {
+                    params.append('status', statusFilter.value);
+                }
+                
+                // 发送请求
+                const response = await fetch(`http://localhost:8082/api/device/list?${params.toString()}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                // 获取响应数据
+                const data = await response.json();
+                
+                // 格式化并显示结果
+                responseResult.textContent = JSON.stringify(data, null, 2);
+                
+                // 根据响应状态显示消息
+                if (response.ok) {
+                    showMessage('API调用成功！', 'success');
+                } else {
+                    showMessage(`API调用失败: ${data.msg || '未知错误'}`, 'error');
+                }
+            } catch (error) {
+                responseResult.textContent = `错误: ${error.message}`;
+                showMessage('请求失败，请检查网络连接', 'error');
+            }
+        });
+        
+        // 跳转到设备管理页面
+        goToDevicesBtn.addEventListener('click', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                showMessage('请先设置Token', 'error');
+                return;
+            }
+            window.location.href = 'http://localhost:3000/devices';
+        });
+        
+        // 消息提示函数
+        function showMessage(message, type = 'info') {
+            // 创建消息元素
+            const msgElement = document.createElement('div');
+            msgElement.className = `fixed top-4 right-4 px-6 py-3 rounded-md shadow-lg transform transition-all duration-300 z-50 ${getTypeClass(type)}`;
+            msgElement.textContent = message;
+            
+            // 添加到页面
+            document.body.appendChild(msgElement);
+            
+            // 动画效果
+            setTimeout(() => {
+                msgElement.classList.add('opacity-0', 'translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(msgElement);
+                }, 300);
+            }, 3000);
+        }
+        
+        // 获取类型对应的样式类
+        function getTypeClass(type) {
+            switch (type) {
+                case 'success':
+                    return 'bg-success text-white';
+                case 'error':
+                    return 'bg-danger text-white';
+                case 'warning':
+                    return 'bg-warning text-white';
+                default:
+                    return 'bg-info text-white';
+            }
+        }
+        
+        // 页面加载时检查已有token
+        window.addEventListener('load', () => {
+            const existingToken = localStorage.getItem('token');
+            if (existingToken) {
+                tokenInput.value = existingToken;
+                showMessage('已检测到保存的Token', 'info');
+            }
+        });
+    </script>
+</body>
+</html>

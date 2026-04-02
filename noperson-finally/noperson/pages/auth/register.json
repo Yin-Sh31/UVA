@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "用户注册",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "navigation-bar": "/components/navigation-bar/navigation-bar"
+  }
+}

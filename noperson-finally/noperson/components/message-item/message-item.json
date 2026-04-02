@@ -1,0 +1,27 @@
+{
+  "component": true,
+  "properties": {
+    "message": {
+      "type": "Object",
+      "value": {}
+    },
+    "currentUserId": {
+      "type": "String",
+      "value": ""
+    }
+  },
+  "methods": {
+    "formatMessageTime": {
+      "type": "Function"
+    },
+    "onAvatarTap": {
+      "type": "Function"
+    },
+    "onImageTap": {
+      "type": "Function"
+    },
+    "onOrderTap": {
+      "type": "Function"
+    }
+  }
+}

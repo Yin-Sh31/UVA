@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cty.nopersonfinally.mapper.FlyerMapper">
+
+    <!-- 批量查询飞手 -->
+    <select id="selectBatchIds" parameterType="java.util.List" resultType="com.cty.nopersonfinally.pojo.entity.UserFlyer">
+        SELECT * FROM user_flyer WHERE user_id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!-- 根据用户ID查询飞手信息 -->
+    <select id="selectByUserId" resultType="com.cty.nopersonfinally.pojo.entity.UserFlyer">
+        SELECT * FROM user_flyer WHERE user_id = #{userId}
+    </select>
+
+</mapper>

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "所有机主",
+  "navigationStyle": "custom",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "enablePullDownRefresh": true
+}
